@@ -1,0 +1,32 @@
+.bg-img{
+    background-image: url('../../../../../assets/background.jpeg');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+}
+
+.bg-effect{
+    background-color: rgba( 0 0 0 / .65);
+}
+
+
+
+.lines::before,
+.lines::after{
+    content: '';
+    background-color: #fff;
+    display: block;
+    width: 40%;
+    height: 1px;
+    position: absolute;
+}
+
+
+.lines::after{
+    right: 0;
+}
+
+.lines::before{
+    left: 0;
+}
+
