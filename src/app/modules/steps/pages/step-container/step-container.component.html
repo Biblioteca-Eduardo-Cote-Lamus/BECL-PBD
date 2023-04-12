@@ -1,0 +1,23 @@
+<div class="bg-img w-full min-h-screen">
+    <!--  Conteedor que genera la sombra -->
+    <div class="w-full h-full bg-effect absolute top-0 left-0 z-10 " >
+        <!-- Contenedor para los componentes -->
+        <div class="w-full bg-white mx-auto rounded-md  ">
+            <!-- contenedor para el step -->
+            <div class="bg-step w-full h-28 p-4">
+                <!-- contenedor para los circles -->
+                <div class="flex justify-center gap-6">
+                    <!-- circle -->
+                    <div class="flex items-center text-center w-8 h-8 rounded-full bg-white" *ngFor="let item of stepItems; index as i" 
+                         [ngClass]="{'bg-select text-white': (i+1) === currentStep }">
+                        <span class="w-full font-bold"> {{item.step}} </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- contenedor para el renderizado de los componentes -->
+        <div class="-mt-6 bg-white w-[90%] mx-auto rounded-md">
+            <router-outlet ></router-outlet>
+        </div>
+    </div>
+</div>
