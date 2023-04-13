@@ -4,6 +4,8 @@ import { StepContainerComponent } from './pages/step-container/step-container.co
 import { PersonalInfoComponent } from './pages/personal-info/personal-info.component';
 import { StepRoutingModule } from './step-routing.module';
 import { ServiceComponent } from './pages/service/service.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { EventComponent } from './pages/event/event.component';
 
 
 
@@ -11,11 +13,14 @@ import { ServiceComponent } from './pages/service/service.component';
   declarations: [
     StepContainerComponent,
     PersonalInfoComponent,
-    ServiceComponent
+    ServiceComponent,
+    EventComponent
   ],
   imports: [
-    CommonModule,
-    StepRoutingModule
+    CommonModule, 
+    ReactiveFormsModule,
+    StepRoutingModule,
+
   ]
 })
 export class StepsFormModule { }

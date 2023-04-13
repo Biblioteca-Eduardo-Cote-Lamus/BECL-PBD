@@ -1,3 +1,98 @@
-<p>service works!</p>
-<button class="flex ml-auto bg-red-600 py-1 px-3 mt-4 rounded-md text-white"
-        (click)="submit()">Echar pa tras</button>
+
+<div class="p-4">
+    <!-- contenedor del header -->
+    <div class="pb-4">
+        <h2 class="font-bold text-xl mb-1">Servicio</h2>
+        <span class="block font-medium text-sm text-gray-400">Seleccione el servicio que desea solicitar.</span>
+    </div>
+    <!-- contenedor para los check -->
+    <div class="">
+        <form autocomplete="false" [formGroup]="myForm">
+            <!-- contenedor para mostrar las opciones primarias: Si se selecciona préstamo, se cargan las opciones de prestamo -->
+            <div *ngIf="service != 'prestamo' || myForm.controls['service'].value !== 'prestamo'; else loans ">
+                <!-- checkbox para el prestamo -->
+                <div class="w-full relative border flex items-center gap-4 mb-4 rounded-md transition-colors" [ngClass]="{'border-yellow-600 card-effect': checkedState('prestamo')}">
+                    <input type="radio" class="hidden" formControlName="service" value="prestamo" id="prestamo">
+                    <div class="ml-4">
+                        <i class="pi pi-building"></i>
+                    </div>
+                    <label class="block w-full text-xs cursor-pointer p-2" for="prestamo">
+                        <h3 class="font-bold pb-1">Prestamo</h3>
+                        <span class="blck"> {{'auditorio, sala de semilleros y sala virtual' | titlecase}} </span>
+                    </label>
+                </div>
+                <!-- checkbox para la capacitacion  -->
+                <div class="w-full relative border flex items-center gap-4 mb-8 rounded-md transition-colors" [ngClass]="{'border-yellow-600 card-effect': checkedState('capacitacion')}">
+                    <input type="radio" class="hidden" formControlName="service" value="capacitacion" id="capacitacion">
+                    <div class="ml-4">
+                        <i class="pi pi-desktop"></i>
+                    </div>
+                    <label class="block w-full text-xs cursor-pointer p-2" for="capacitacion">
+                        <h3 class="font-bold pb-1">Capacitación</h3>
+                        <span class="blck"> {{'Capacitación en bases de datos ' | titlecase}} </span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Contedor para mostrar las opciones de préstamo -->
+            <ng-template #loans>
+                <div>
+                    <button type="button" class="flex items-center gap-2 py-1 px-3 mt-0 mb-3 rounded-md text-gray-400"
+                            (click)="changeService()">
+                            <i class="text-sm pi pi-angle-left"></i> 
+                            Cambiar de servicio
+                    </button>
+                    
+                    <div class="flex flex-wrap">
+    
+                        <div class="w-full relative border flex items-center gap-4 mb-4 p-2 rounded-md transition-colors" [ngClass]="{'border-yellow-600 card-effect': checkedState('auditorio')}">
+                            <input type="radio" id="auditorio" formControlName="loan" value="auditorio" class="hidden">
+                            <label for="auditorio" class="flex items-center gap-2 w-full text-xs cursor-pointer p-2">
+                                <!-- icono -->
+                                <div class="">
+                                    <i class="text-2xl pi pi-building"></i>
+                                </div>
+                                <h3 class="font-bold text-[15px]"> {{'auditorio eduardo cote lamus' | titlecase}}  </h3>
+                            </label>
+                        </div>
+        
+                        <div class="w-full relative border flex items-center gap-4 mb-4 p-2 rounded-md transition-colors" [ngClass]="{'border-yellow-600 card-effect': checkedState('semilleros')}">
+                            <input type="radio" id="semilleros" formControlName="loan" value="semilleros" class="hidden">
+                            <label for="semilleros" class="flex items-center gap-2 w-full text-xs cursor-pointer p-2">
+                                <!-- icono -->
+                                <div class="">
+                                    <i class="text-2xl pi pi-users"></i>
+                                </div>
+                                <h3 class="font-bold text-[15px]"> {{'sala semilleros' | titlecase}}  </h3>
+                            </label>
+                        </div>
+        
+                        <div class="w-full relative border flex items-center gap-4 mb-4 p-2 rounded-md transition-colors" [ngClass]="{'border-yellow-600 card-effect': checkedState('virtual')}">
+                            <input type="radio" id="virtual" formControlName="loan" value="virtual" class="hidden">
+                            <label for="virtual" class="flex items-center gap-2 w-full text-xs cursor-pointer p-2">
+                                <!-- icono -->
+                                <div class="">
+                                    <i class="text-2xl pi pi-desktop"></i>
+                                </div>
+                                <h3 class="font-bold text-[15px]"> {{'sala virtual' | titlecase}}  </h3>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </ng-template>
+
+
+            <!-- contenedor para los botones de back y next -->
+            <div class="flex justify-between">
+                <a routerLink="/eventos/personal-info" class="flex py-1 px-3 mt-4 rounded-md text-gray-400"
+                        (click)="changeStep(1)">Anterior</a>
+
+                <button type="button" class="flex bg-red-600 py-1 px-3 mt-4 rounded-md text-white"
+                        (click)="submit()">Siguiente</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- <button class="flex ml-auto bg-red-600 py-1 px-3 mt-4 rounded-md text-white"
+        (click)="submit()">Echar pa tras</button> -->
