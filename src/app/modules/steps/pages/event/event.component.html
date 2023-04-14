@@ -1,0 +1,102 @@
+<div class="p-4">
+    <!-- Contenedor para el titulo -->
+    
+    <!-- Contenedor para los formularios -->
+    <div *ngIf="!sheduleEvent; else final">
+        <div class="pb-4">
+            <h2 class="font-bold text-xl mb-1">Datos del Evento</h2>
+            <span class="block font-medium text-sm text-gray-400">Ingrese los datos para el evento/capacitacion que se realizará.</span>
+        </div>
+        <form>
+            <!-- Contenedor para el titulo del evento -->
+            <div class="mb-4">
+                <label for="title">Título del evento *</label>
+                <!-- Contenedor para hacer el input group -->
+                <div class="flex border rounded-md">
+                    <span class="inline-block p-2 bg-gray-400 rounded-l-md text-white">A: </span>
+                    <input class="block w-full pl-3 outline-none" type="text" placeholder="Realización pruebas saber..." id="title">
+                </div>
+            </div>
+
+            <!-- Contenedor para asistentes, fecha y horario -->
+            <div>
+                <!-- contenedor para asistentes y fechas -->
+                <div class="flex flex-col">
+                    <!-- asistentes -->
+                    <div class="mb-2">
+                        <label for="">Personas a Asistir *</label>
+                        <div class="flex border rounded-md">
+                            <span class="inline-block p-2 bg-gray-400 rounded-l-md text-white">
+                                <i class="pi pi-users"></i>    
+                            </span>
+                            <input class="block w-full pl-3 outline-none" type="text" placeholder="50">
+                        </div>
+                    </div>
+                    <!-- fecha -->
+                    <div class="mb-2">
+                        <label for="">Fecha de Realización *</label>
+                        <div class="flex border rounded-md">
+                            <span class="inline-block p-2 bg-gray-400 rounded-l-md text-white">
+                                <i class="pi pi-calendar"></i>    
+                            </span>
+                            <input class="block w-full pl-3 outline-none" type="text" placeholder="15/02/2023">
+                        </div>
+                    </div>
+                </div>
+                <!-- contenedor para los horarios -->
+                <div class="mb-4">
+                    <!-- horario de inicio -->
+                    <div class="mb-2">
+                        <label for="">Hora de inicio *</label>
+                        <div class="flex border rounded-md">
+                            <span class="inline-block p-2 bg-gray-400 rounded-l-md text-white"> 
+                                <i class="pi pi-clock"></i>
+                            </span>
+                            <input  class="block w-full pl-3 outline-none" type="text" placeholder="06:00 a.m.">
+                        </div>
+                    </div>
+                    <!-- horario de fin -->
+                    <div>
+                        <label for="">Hora de finalización *</label>
+                        <div class="flex border rounded-md">
+                            <span class="inline-block p-2 bg-gray-400 rounded-l-md text-white"> 
+                                <i class="pi pi-clock"></i>
+                            </span>
+                            <input class="block w-full pl-3 outline-none" type="text" placeholder="08:00 a.m.">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="flex justify-between">
+                <a routerLink="/eventos/personal-info" class="flex py-1 px-3 mt-4 rounded-md text-gray-400"
+                   (click) = 'back()'    >Anterior</a>
+
+                <button type="button" class="flex bg-red-600 py-1 px-3 mt-4 rounded-md text-white"
+                        (click)="submit()">Agendar</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- contenedor final de agendamiento del evento -->
+    <ng-template #final>
+        <div class="p-2">
+            <button (click)="regresar()">Regresar</button>
+            <!-- encabezado -->
+            <div class="flex items-center justify-center mb-4">
+                <img src="assets/logo-colors.png" alt="icono de check" class="w-[150px] max-w-[450px]">
+            </div>
+            <!-- texto de agradecimienot -->
+            <div class="text-center">
+                <h2 class=" text-2xl font-semibold pb-5"> ¡Evento Agendado! </h2>
+                
+                <p class="text-[12px] pb-6">Señor/a Angel Gabriel Garcia Rangel, el evento Capacitacion Base de datos, ha sido agendado éxitosamente para 14-04-2023 en el horario de 06:00am a 08:00am. Le agradecemos que sea puntual en la recepción y entrega de auditorio.</p>
+                <p>"Se amable sabiendo"</p>
+
+                <div class="">
+                    <img src="assets/Firma Jefe.png" alt="" class="mx-auto">
+                </div>
+
+            </div>
+        </div>
+    </ng-template>
+</div>
