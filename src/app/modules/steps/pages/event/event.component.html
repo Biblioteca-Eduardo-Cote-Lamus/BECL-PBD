@@ -4,7 +4,7 @@
     <!-- Contenedor para los formularios -->
     <div *ngIf="!sheduleEvent; else final">
         <div class="pb-4">
-            <h2 class="font-bold text-xl mb-1">Datos del Evento</h2>
+            <h2 class="font-bold text-xl mb-2 md:text-3xl">Datos del Evento</h2>
             <span class="block font-medium text-sm text-gray-400">Ingrese los datos para el evento/capacitacion que se realizará.</span>
         </div>
         <form>
@@ -19,11 +19,11 @@
             </div>
 
             <!-- Contenedor para asistentes, fecha y horario -->
-            <div>
+            <div class="w-full">
                 <!-- contenedor para asistentes y fechas -->
-                <div class="flex flex-col">
+                <div class="lg:flex lg:mb-4 gap-8">
                     <!-- asistentes -->
-                    <div class="mb-2">
+                    <div class="lg:w-1/2 mb-2">
                         <label for="">Personas a Asistir *</label>
                         <div class="flex border rounded-md">
                             <span class="inline-block p-2 bg-gray-400 rounded-l-md text-white">
@@ -33,7 +33,7 @@
                         </div>
                     </div>
                     <!-- fecha -->
-                    <div class="mb-2">
+                    <div class="lg:w-1/2 mb-2">
                         <label for="">Fecha de Realización *</label>
                         <div class="flex border rounded-md">
                             <span class="inline-block p-2 bg-gray-400 rounded-l-md text-white">
@@ -44,9 +44,9 @@
                     </div>
                 </div>
                 <!-- contenedor para los horarios -->
-                <div class="mb-4">
+                <div class="mb-4 gap-8 lg:flex">
                     <!-- horario de inicio -->
-                    <div class="mb-2">
+                    <div class="mb-2 lg:w-1/2">
                         <label for="">Hora de inicio *</label>
                         <div class="flex border rounded-md">
                             <span class="inline-block p-2 bg-gray-400 rounded-l-md text-white"> 
@@ -56,7 +56,7 @@
                         </div>
                     </div>
                     <!-- horario de fin -->
-                    <div>
+                    <div class="lg:w-1/2">
                         <label for="">Hora de finalización *</label>
                         <div class="flex border rounded-md">
                             <span class="inline-block p-2 bg-gray-400 rounded-l-md text-white"> 

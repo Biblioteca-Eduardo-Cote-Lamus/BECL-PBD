@@ -1,8 +1,8 @@
 
-<div class="p-4">
+<div class="p-4 h-full">
     <!-- contenedor del header -->
     <div class="pb-4">
-        <h2 class="font-bold text-xl mb-1">Servicio</h2>
+        <h2 class="font-bold text-xl mb-2 lg:text-4xl">Servicio</h2>
         <span class="block font-medium text-sm text-gray-400">Seleccione el servicio que desea solicitar.</span>
     </div>
     <!-- contenedor para los check -->
@@ -11,25 +11,25 @@
             <!-- contenedor para mostrar las opciones primarias: Si se selecciona préstamo, se cargan las opciones de prestamo -->
             <div *ngIf="service != 'prestamo' || myForm.controls['service'].value !== 'prestamo'; else loans ">
                 <!-- checkbox para el prestamo -->
-                <div class="w-full relative border flex items-center gap-4 mb-4 rounded-md transition-colors" [ngClass]="{'border-yellow-600 card-effect': checkedState('prestamo')}">
+                <div class="w-full relative  mb-4 rounded-md transition-colors">
                     <input type="radio" class="hidden" formControlName="service" value="prestamo" id="prestamo">
-                    <div class="ml-4">
-                        <i class="pi pi-building"></i>
-                    </div>
-                    <label class="block w-full text-xs cursor-pointer p-2" for="prestamo">
-                        <h3 class="font-bold pb-1">Prestamo</h3>
-                        <span class="blck"> {{'auditorio, sala de semilleros y sala virtual' | titlecase}} </span>
+                    <label class="w-full flex border rounded-md  items-center gap-4 text-xs cursor-pointer p-2 transition-all "[ngClass]="{'border-yellow-600 card-effect': checkedState('prestamo')}" for="prestamo">
+                        <i class="ml-2 pi pi-building lg:text-4xl"></i>
+                        <div>
+                            <h3 class="font-bold pb-1 lg:text-xl">Prestamo</h3>
+                            <span class="blck lg:text-lg text-gray-400"> {{'auditorio, sala de semilleros y sala virtual' | titlecase}} </span>
+                        </div>
                     </label>
                 </div>
                 <!-- checkbox para la capacitacion  -->
-                <div class="w-full relative border flex items-center gap-4 mb-8 rounded-md transition-colors" [ngClass]="{'border-yellow-600 card-effect': checkedState('capacitacion')}">
+                <div class="w-full relative mb-8 rounded-md transition-colors">
                     <input type="radio" class="hidden" formControlName="service" value="capacitacion" id="capacitacion">
-                    <div class="ml-4">
-                        <i class="pi pi-desktop"></i>
-                    </div>
-                    <label class="block w-full text-xs cursor-pointer p-2" for="capacitacion">
-                        <h3 class="font-bold pb-1">Capacitación</h3>
-                        <span class="blck"> {{'Capacitación en bases de datos ' | titlecase}} </span>
+                    <label class="w-full flex border rounded-md  items-center gap-4 text-xs cursor-pointer p-2 transition-all "[ngClass]="{'border-yellow-600 card-effect': checkedState('capacitacion')}" for="capacitacion">
+                        <i class="ml-2 pi pi-desktop lg:text-4xl"></i>
+                        <div>
+                            <h3 class="font-bold pb-1 lg:text-xl">Capacitación</h3>
+                            <span class="blck lg:text-lg text-gray-400"> {{'auditorio, sala de semilleros y sala virtual' | titlecase}} </span>
+                        </div>
                     </label>
                 </div>
             </div>
@@ -45,9 +45,9 @@
                     
                     <div class="flex flex-wrap">
     
-                        <div class="w-full relative border flex items-center gap-4 mb-4 p-2 rounded-md transition-colors" [ngClass]="{'border-yellow-600 card-effect': checkedState('auditorio')}">
+                        <div class="w-full relative flex items-center gap-4 mb-4 rounded-md transition-colors">
                             <input type="radio" id="auditorio" formControlName="loan" value="auditorio" class="hidden">
-                            <label for="auditorio" class="flex items-center gap-2 w-full text-xs cursor-pointer p-2">
+                            <label for="auditorio" class="w-full flex border rounded-md  items-center gap-4 text-xs cursor-pointer p-4 transition-all" [ngClass]="{'border-yellow-600 card-effect': checkedState('auditorio')}" >
                                 <!-- icono -->
                                 <div class="">
                                     <i class="text-2xl pi pi-building"></i>
@@ -56,9 +56,9 @@
                             </label>
                         </div>
         
-                        <div class="w-full relative border flex items-center gap-4 mb-4 p-2 rounded-md transition-colors" [ngClass]="{'border-yellow-600 card-effect': checkedState('semilleros')}">
+                        <div class="w-full relative flex items-center gap-4 mb-4 rounded-md transition-colors">
                             <input type="radio" id="semilleros" formControlName="loan" value="semilleros" class="hidden">
-                            <label for="semilleros" class="flex items-center gap-2 w-full text-xs cursor-pointer p-2">
+                            <label for="semilleros" class="w-full flex border rounded-md  items-center gap-4 text-xs cursor-pointer p-4 transition-all" [ngClass]="{'border-yellow-600 card-effect': checkedState('semilleros')}" >
                                 <!-- icono -->
                                 <div class="">
                                     <i class="text-2xl pi pi-users"></i>
@@ -67,9 +67,9 @@
                             </label>
                         </div>
         
-                        <div class="w-full relative border flex items-center gap-4 mb-4 p-2 rounded-md transition-colors" [ngClass]="{'border-yellow-600 card-effect': checkedState('virtual')}">
+                        <div class="w-full relative flex items-center gap-4 mb-4 rounded-md transition-colors">
                             <input type="radio" id="virtual" formControlName="loan" value="virtual" class="hidden">
-                            <label for="virtual" class="flex items-center gap-2 w-full text-xs cursor-pointer p-2">
+                            <label for="virtual" class="w-full flex border rounded-md  items-center gap-4 text-xs cursor-pointer p-4 transition-all" [ngClass]="{'border-yellow-600 card-effect': checkedState('virtual')}" >
                                 <!-- icono -->
                                 <div class="">
                                     <i class="text-2xl pi pi-desktop"></i>
