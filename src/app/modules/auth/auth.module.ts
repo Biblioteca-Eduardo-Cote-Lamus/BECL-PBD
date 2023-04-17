@@ -4,7 +4,8 @@ import { SignInComponent } from './pages/sign-in/sign-in.component';
 import { AuthRoutingModule } from './auth-routing.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { PrimeModule } from '../primeng/prime.module'
-
+import { HttpClientModule } from '@angular/common/http'
+import { JwtHelperService } from '@auth0/angular-jwt';
 
 @NgModule({
   declarations: [
@@ -14,7 +15,8 @@ import { PrimeModule } from '../primeng/prime.module'
     CommonModule,
     AuthRoutingModule,
     ReactiveFormsModule,
-    PrimeModule
+    PrimeModule,
+    HttpClientModule,
   ]
 })
 export class AuthModule { }
