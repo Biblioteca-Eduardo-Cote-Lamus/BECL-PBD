@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { Routes, RouterModule, CanLoad } from '@angular/router';
+import { AuthGuard } from './shared/guards/auth.guard';
 
 const routes: Routes = [
   {
@@ -8,7 +9,9 @@ const routes: Routes = [
   },
   {
     path: 'eventos',
-    loadChildren: () => import('./modules/steps/steps-form.module').then(a => a.StepsFormModule)
+    loadChildren: () => import('./modules/steps/steps-form.module').then(a => a.StepsFormModule),
+    // canLoad: [AuthGuard],
+    // canActivate: [AuthGuard]
   },
   {
     path: '**',

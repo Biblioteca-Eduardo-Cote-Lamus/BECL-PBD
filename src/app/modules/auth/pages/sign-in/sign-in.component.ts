@@ -57,10 +57,10 @@ export class SignInComponent {
 
     this.authService.login(username, password).subscribe({
     next: ({ok})=> {
-        if(!ok){
-          //TODO: Mostrar modal o algun indicador de que no salio bien 
-          return;
-        }
+        // if(!ok){
+        //   //TODO: Mostrar modal o algun indicador de que no salio bien 
+        //   return;
+        // }
         this.router.navigateByUrl('/eventos/personal-info')
       }
     });

@@ -10,22 +10,22 @@
             <!-- Nombre -->
             <div class="pb-4">
                 <label for="name" class="inline-block px-1 pb-2">Nombre *</label>
-                <input type="text" id="name" class="w-full border border-gray-300 rounded-md px-2 py-1">
+                <input type="text" id="name" class="w-full border border-gray-300 rounded-md px-2 py-1" disabled [value]="getNormalName() | titlecase">
             </div>
             <!-- Correo electronico -->
             <div class="pb-4">
                 <label for="email" class="inline-block px-1 pb-2">Correo *</label>
-                <input type="email" id="email" class="w-full border border-gray-300 rounded-md px-2 py-1">
+                <input type="email" id="email" class="w-full border border-gray-300 rounded-md px-2 py-1" disabled [value]="personalInfo.user_email">
             </div>
             <!-- Código -->
             <div class="pb-4">
                 <label for="name" class="inline-block px-1 pb-2">Código *</label>
-                <input type="text" id="name" class="w-full border border-gray-300 rounded-md px-2 py-1">
+                <input type="text" id="name" class="w-full border border-gray-300 rounded-md px-2 py-1" disabled [value]="personalInfo.user_id">
             </div>
             <!-- Division -->
             <div class="pb-4">
                 <label for="name" class="inline-block px-1 pb-2">División *</label>
-                <input type="text" id="name" class="w-full border border-gray-300 rounded-md px-2 py-1">
+                <input type="text" id="name" class="w-full border border-gray-300 rounded-md px-2 py-1" disabled [value]="personalInfo.user_faculty">
             </div>
 
             <button type="button" class="flex ml-auto bg-red-600 py-1 px-3 my-1 rounded-md text-white"

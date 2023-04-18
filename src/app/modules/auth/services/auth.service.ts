@@ -14,7 +14,7 @@ export class AuthService {
   //Observables para manejar el usuario actual
   private currentUserBehavior!:BehaviorSubject<Usuario>;
   private currentUserObservable!: Observable<Usuario>;
-
+  private _isLogin: boolean = false;
 
   private jwtHelper: JwtHelperService
 
@@ -22,7 +22,7 @@ export class AuthService {
   private token: string = '';
 
   //variable para peticiones al backend de autenticacion
-  private baseUrl = enviroment.baseUrlAuth;
+  private baseUrl = enviroment.baseUrlAuhtLocal;
 
   constructor(
     private http: HttpClient
@@ -44,10 +44,14 @@ export class AuthService {
         //si no son las credenciales o hay un error, se mantiene el usuario vacio
         if(! res.ok){
           this.currentUserBehavior.next({} as Usuario);
+          return;
         }
-        //Caso contrario se crear el objeto
+        //Caso contrario se crea el objeto
         this.currentUserBehavior.next(this.jwtHelper.decodeToken(this.token)!);
         this.currentUserObservable = this.currentUserBehavior.asObservable();
+        this._isLogin = true;
+        //guardo en el localstorage 
+        this.saveOnLocalStorage(this.jwtHelper.decodeToken(this.token)!);
       }),
     );
   }
@@ -55,5 +59,13 @@ export class AuthService {
   //Método para menejar el cierre de sesión.
   logout(){
 
+  }
+
+  get isLogin(){
+    return this._isLogin
+  }
+
+  private saveOnLocalStorage(user: Usuario){
+    localStorage.setItem('user', JSON.stringify(user));
   }
 }
