@@ -7,14 +7,14 @@
             <h2 class="font-bold text-xl mb-2 md:text-3xl">Datos del Evento</h2>
             <span class="block font-medium text-sm text-gray-400">Ingrese los datos para el evento/capacitacion que se realizará.</span>
         </div>
-        <form>
+        <form [formGroup]="eventForm">
             <!-- Contenedor para el titulo del evento -->
             <div class="mb-4">
                 <label for="title">Título del evento *</label>
                 <!-- Contenedor para hacer el input group -->
-                <div class="flex border rounded-md">
+                <div class="flex">
                     <span class="inline-block p-2 bg-gray-400 rounded-l-md text-white">A: </span>
-                    <input class="block w-full pl-3 outline-none" type="text" placeholder="Realización pruebas saber..." id="title">
+                    <input class="block w-full pl-3 border-r border-y rounded-r-md outline-none transition-colors " type="text" placeholder="Realización pruebas saber..." id="title" formControlName="title">
                 </div>
             </div>
 
@@ -25,44 +25,54 @@
                     <!-- asistentes -->
                     <div class="lg:w-1/2 mb-2">
                         <label for="">Personas a Asistir *</label>
-                        <div class="flex border rounded-md">
+                        <div class="flex  rounded-lg">
                             <span class="inline-block p-2 bg-gray-400 rounded-l-md text-white">
                                 <i class="pi pi-users"></i>    
                             </span>
-                            <input class="block w-full pl-3 outline-none" type="text" placeholder="50">
+                            <input class="block w-full pl-3 border-r border-y rounded-r-md outline-none transition-colors" type="text" placeholder="50" formControlName="people">
                         </div>
                     </div>
                     <!-- fecha -->
                     <div class="lg:w-1/2 mb-2">
-                        <label for="">Fecha de Realización *</label>
-                        <div class="flex border rounded-md">
-                            <span class="inline-block p-2 bg-gray-400 rounded-l-md text-white">
-                                <i class="pi pi-calendar"></i>    
-                            </span>
-                            <input class="block w-full pl-3 outline-none" type="text" placeholder="15/02/2023">
+                        <label for="date">Fecha de Realización *</label>
+                        <div class="flex rounded-md">
+                            <div class="flex">
+                                <span class="flex items-center justify-center h-full p-2  bg-gray-400 rounded-l-md text-white">
+                                    <i class="pi pi-calendar"></i>    
+                                </span>
+                            </div>
+                            <div class="w-full p-fluid">
+                                <p-calendar formControlName="date" (onSelect)="algo()" dateFormat="dd/mm/yy" formControlName="date"></p-calendar>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <!-- contenedor para los horarios -->
                 <div class="mb-4 gap-8 lg:flex">
                     <!-- horario de inicio -->
-                    <div class="mb-2 lg:w-1/2">
+                    <div class="mb-2 lg:w-1/2 ">
                         <label for="">Hora de inicio *</label>
-                        <div class="flex border rounded-md">
+                        <div class="flex" >
                             <span class="inline-block p-2 bg-gray-400 rounded-l-md text-white"> 
                                 <i class="pi pi-clock"></i>
                             </span>
-                            <input  class="block w-full pl-3 outline-none" type="text" placeholder="06:00 a.m.">
+                            <!-- <input  class="block w-full pl-3 outline-none" type="text" placeholder="06:00 a.m."> -->
+                            <div class="w-full p-fluid">
+                                <p-dropdown [options]="start" optionLabel="hour" placeholder="Seleccione la hora de inicio" (onClick)="clearEndHoursList()" (onChange)="endTimes($event)" formControlName="start"></p-dropdown>
+                            </div>
                         </div>
                     </div>
                     <!-- horario de fin -->
                     <div class="lg:w-1/2">
                         <label for="">Hora de finalización *</label>
-                        <div class="flex border rounded-md">
+                        <div class="flex">
                             <span class="inline-block p-2 bg-gray-400 rounded-l-md text-white"> 
                                 <i class="pi pi-clock"></i>
                             </span>
-                            <input class="block w-full pl-3 outline-none" type="text" placeholder="08:00 a.m.">
+                            <!-- <input class="block w-full pl-3 outline-none" type="text" placeholder="08:00 a.m."> -->
+                            <div class="w-full p-fluid">
+                                <p-dropdown [options]="endHours" optionLabel="hour" placeholder="Seleccione la hora de finalizacion" formControlName="end" ></p-dropdown>
+                            </div>
                         </div>
                     </div>
                 </div>

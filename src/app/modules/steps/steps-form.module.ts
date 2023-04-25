@@ -6,6 +6,7 @@ import { StepRoutingModule } from './step-routing.module';
 import { ServiceComponent } from './pages/service/service.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { EventComponent } from './pages/event/event.component';
+import { PrimeModule } from '../primeng/prime.module';
 
 
 
@@ -20,7 +21,7 @@ import { EventComponent } from './pages/event/event.component';
     CommonModule, 
     ReactiveFormsModule,
     StepRoutingModule,
-
+    PrimeModule
   ]
 })
 export class StepsFormModule { }
