@@ -7,6 +7,7 @@ import { ServiceComponent } from './pages/service/service.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { EventComponent } from './pages/event/event.component';
 import { PrimeModule } from '../primeng/prime.module';
+import { HttpClientModule } from '@angular/common/http';
 
 
 
@@ -20,6 +21,7 @@ import { PrimeModule } from '../primeng/prime.module';
   imports: [
     CommonModule, 
     ReactiveFormsModule,
+    HttpClientModule,
     StepRoutingModule,
     PrimeModule
   ]

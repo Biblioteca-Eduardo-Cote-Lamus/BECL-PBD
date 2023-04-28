@@ -14,7 +14,6 @@ export class PersonalInfoComponent implements OnInit{
   private _personalInfo: Usuario = {} as Usuario;
 
   constructor(
-    private router: Router,
     private stepService: StepService,
     private ticket: ReservationTicketService
   ){}
@@ -32,7 +31,7 @@ export class PersonalInfoComponent implements OnInit{
     return this._personalInfo
   }
 
-  //Método para obtener el nombre en formato N A 
+  //Método para obtener el nombre en formato Nombre Apellido 
   public getNormalName(){
 
     const length = this.personalInfo.user_name.length;
@@ -43,11 +42,9 @@ export class PersonalInfoComponent implements OnInit{
   }
 
   public submit(){
-    this.stepService.changeStepValue(2);
-
     //guardamos la información el ticketService
     this.ticket.reservationTicket.personalInformation = this.personalInfo;
-
-    this.router.navigateByUrl('eventos/service')
+    //cambiamos al siguiente paso
+    this.stepService.changeStepValue(2);
   }
 }

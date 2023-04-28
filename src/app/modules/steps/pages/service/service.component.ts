@@ -19,7 +19,6 @@ export class ServiceComponent implements OnInit{
    };
 
   constructor(
-    private router: Router,
     private stepService: StepService ,
     private fb: FormBuilder,
     private ticket: ReservationTicketService
@@ -72,10 +71,9 @@ export class ServiceComponent implements OnInit{
     
     //Envio la información al servicio
     this.ticket.reservationTicket.service = this._service;
-    
-    
+        
     this.stepService.changeStepValue(3)
-    this.router.navigateByUrl('/eventos/event')
+
   }
 
   checkedState(value: string){

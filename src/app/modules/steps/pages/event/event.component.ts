@@ -1,34 +1,27 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { StepService } from 'src/app/shared/services/step.service';
 import { ReservationTicketService } from '../../services/reservation-ticket.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { EventsService } from '../../services/events.service';
+import { Events, EventsHour } from 'src/app/data/models/events.model';
 
-interface Hours {
-  hour: number
-  possibles: number[]
-}
+
 
 @Component({
   selector: 'app-event',
   templateUrl: './event.component.html',
   styleUrls: ['./event.component.css']
 })
-export class EventComponent {
+export class EventComponent implements OnInit{
 
   //Variable para controlar el step 4
   private _scheduleEvent = false;
+  public minDate: Date = new Date();
+  public maxDate!: Date 
 
   // Variable para testar la respueta del back 
-  public start: Hours[] = 
-  [
-    {hour: 6,  possibles: [7, 8, 9]},
-    {hour: 7,  possibles: [8, 9]},
-    {hour: 8,  possibles: [9]},
-    {hour: 12, possibles: [13]},
-    {hour: 15, possibles: [16]},
-    {hour: 17, possibles: [18]}
-  ]
+  public start: EventsHour[] = []
 
   //Lista de las horas de finalización
   public endHours: any = [ ];
@@ -37,21 +30,29 @@ export class EventComponent {
   public eventForm: FormGroup = this.fb.group({
     title: [ , [Validators.required] ],
     people: [ , [ Validators.required, Validators.min(50)] ],
-    date:  [ Date, [Validators.required ] ],
+    date:  [ Date , [Validators.required ] ],
     start: [, [Validators.required] ],
     end: [, [Validators.required] ]
   });
 
   constructor(
     private stepService: StepService,
-    private router: Router,
+    private eventService: EventsService,
     private ticket: ReservationTicketService,
     private fb: FormBuilder
   ){}
 
+  ngOnInit(): void {
+  }
+
   get sheduleEvent(){
     return this._scheduleEvent;
   }
+
+  get typeService(){
+    return this.ticket.reservationTicket.service.type[0]
+  }
+
 
   set changeSheduleEvent(value: boolean){
     this._scheduleEvent = value;
@@ -60,7 +61,6 @@ export class EventComponent {
   //Método para regresar al step 2
   back(){
     this.stepService.changeStepValue(2);
-    this.router.navigateByUrl('/eventos/service')
   }
 
   //Método para regresar del step 4 al 3
@@ -81,7 +81,7 @@ export class EventComponent {
    * @returns Un string indicando la hora en formato pm o am.
    */
   public changeTwelveHour(hour: number){
-    return hour > 12 ? `${Math.abs(hour - 12)} pm` : `${hour} am`
+    return hour > 12 ? `${Math.abs(hour - 12)}:00 pm` : `${hour}:00 am`
   }
 
   /**
@@ -90,14 +90,16 @@ export class EventComponent {
    * @returns No retorna nada, solo genera la lista de horas de finalización para cada hora de inicio
    */
   public endTimes(event: any){
+    console.log(event.value);
+    
     //Se borra cualquier elemento que ya exista primero
     this.endHours.splice(0, this.endHours.length); 
     
     //Se obtienen las horas posibles de finalizacion
-    const { possibles } = event.value;
+    const { possible } = event.value;
     
     //Teniendo las horas, se recorre cada hora y se añade a la lista de endHours
-    possibles.forEach( (hour:number) => {
+    possible.forEach( (hour:number) => {
       this.endHours.push({ hour: `${this.changeTwelveHour(hour)}` })
     });
 
@@ -124,7 +126,15 @@ export class EventComponent {
     const fechaInicio = `${fecha[0]}T00:00:00-05:00`
     const fechaFinal = `${fecha[0]}T23:59:59.999999-05:00`
     console.log({fechaInicio, fechaFinal});
-
+    const token = localStorage.getItem('token') || '';
+    this.eventService.getEvents({token, dates:[fechaInicio, fechaFinal], type:'A' }).subscribe(
+      {
+        next: hours  =>{
+          this.start = hours.events_hours;
+          console.log(this.start)
+        }
+      }
+    )
     // console.log(`la fecha seleccionada ${fecha}`);
     
     // console.log(`seleccionada la fecha ${this.eventForm.controls['date']?.value}`);

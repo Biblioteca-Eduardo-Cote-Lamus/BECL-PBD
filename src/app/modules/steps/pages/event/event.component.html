@@ -13,7 +13,7 @@
                 <label for="title">Título del evento *</label>
                 <!-- Contenedor para hacer el input group -->
                 <div class="flex">
-                    <span class="inline-block p-2 bg-gray-400 rounded-l-md text-white">A: </span>
+                    <span class="inline-block p-2 bg-gray-400 rounded-l-md text-white"> {{ typeService | titlecase }}: </span>
                     <input class="block w-full pl-3 border-r border-y rounded-r-md outline-none transition-colors " type="text" placeholder="Realización pruebas saber..." id="title" formControlName="title">
                 </div>
             </div>
@@ -42,7 +42,8 @@
                                 </span>
                             </div>
                             <div class="w-full p-fluid">
-                                <p-calendar formControlName="date" (onSelect)="algo()" dateFormat="dd/mm/yy" formControlName="date"></p-calendar>
+                                <!-- (onSelect)="algo()" -->
+                                <p-calendar formControlName="date" (onSelect)="algo()" [minDate]="minDate" [maxDate]="maxDate"   dateFormat="dd/mm/yy" ></p-calendar>
                             </div>
                         </div>
                     </div>
@@ -58,7 +59,7 @@
                             </span>
                             <!-- <input  class="block w-full pl-3 outline-none" type="text" placeholder="06:00 a.m."> -->
                             <div class="w-full p-fluid">
-                                <p-dropdown [options]="start" optionLabel="hour" placeholder="Seleccione la hora de inicio" (onClick)="clearEndHoursList()" (onChange)="endTimes($event)" formControlName="start"></p-dropdown>
+                                <p-dropdown [options]="start" optionLabel="hours" placeholder="Seleccione la hora de inicio" (onClick)="clearEndHoursList()" (onChange)="endTimes($event)" formControlName="start"></p-dropdown>
                             </div>
                         </div>
                     </div>
