@@ -22,7 +22,7 @@ export class AuthService {
   private token: string = '';
 
   //variable para peticiones al backend de autenticacion
-  private baseUrl = enviroment.baseUrlAuhtLocal;
+  private baseUrl = enviroment.baseUrlLocal;
 
   constructor(
     private http: HttpClient
@@ -39,8 +39,9 @@ export class AuthService {
   login(username: string, password: string): Observable<Token>{
     return this.http.post<Token>(this.baseUrl+"login/", { username, password }).pipe(
       tap( (res:Token) => {
-        //obtengo el token de la respuesta 
+        //obtengo el token de la respuesta y se guarda momentaneamente en el localStorage
         this.token = res.token;
+        localStorage.setItem('token', this.token)
         //si no son las credenciales o hay un error, se mantiene el usuario vacio
         if(! res.ok){
           this.currentUserBehavior.next({} as Usuario);

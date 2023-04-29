@@ -38,7 +38,9 @@ export class SignInComponent {
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router
-  ) { }
+  ) { 
+    localStorage.clear()
+  }
 
   validateField(control: string){
     return this.loginForm.controls[control].touched && this.loginForm.controls[control].invalid 
