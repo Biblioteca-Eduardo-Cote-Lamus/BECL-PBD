@@ -33,7 +33,7 @@ export class StepService {
    * @param step paso al que se desea avanzar
    */
   private goToCurrentStep(step: number){    
-    if(step !== 4)
+    if(step < 4)
       this.router.navigate(this.routes[step-1]);
   }
 
@@ -42,8 +42,10 @@ export class StepService {
    * @param step paso que se desea guardar
    */
   private saveCurrentStep(step: number){
-    // Guardo el estado actual del step
-    localStorage.setItem('step', `${step}`);
+    if(step < 4){
+      // Guardo el estado actual del step
+      localStorage.setItem('step', `${step}`);
+    }
   }
 
 }

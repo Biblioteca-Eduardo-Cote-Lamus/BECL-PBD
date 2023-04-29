@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { StepService } from 'src/app/shared/services/step.service';
 import { ReservationTicketService } from '../../services/reservation-ticket.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { EventsService } from '../../services/events.service';
-import { Events, EventsHour } from 'src/app/data/models/events.model';
-
+import { EventsHour } from 'src/app/data/models/events.model';
+import { holidays } from 'src/app/data/const/holidays.const';
 
 
 @Component({
@@ -17,6 +16,7 @@ export class EventComponent implements OnInit{
 
   //Variable para controlar el step 4
   private _scheduleEvent = false;
+  //Varibales para controlar la fecha minima (siempre el dia actual) y la fecha máxima (sin limites)
   public minDate: Date = new Date();
   public maxDate!: Date 
 
@@ -43,6 +43,7 @@ export class EventComponent implements OnInit{
   ){}
 
   ngOnInit(): void {
+    
   }
 
   get sheduleEvent(){
@@ -50,8 +51,18 @@ export class EventComponent implements OnInit{
   }
 
   get typeService(){
-    return this.ticket.reservationTicket.service.type[0]
+    // this.ticket.reservationTicket.service.physicalSpace
+    return ! localStorage.getItem('ticket') ? this.ticket.reservationTicket.service.physicalSpace : JSON.parse(localStorage.getItem('ticket')!)['service']['physicalSpace']
   }
+
+  get Ticket(){
+    return {...this.ticket.reservationTicket}
+  }
+
+  get disableDates(): Date[]{
+    return holidays
+  }
+
 
 
   set changeSheduleEvent(value: boolean){
@@ -69,10 +80,16 @@ export class EventComponent implements OnInit{
     this.stepService.changeStepValue(3);
   }
 
-  //Método para enviar el formulario
+  /**
+   * Método para enviar la información al backend y que se agende el evento/capacitación 
+   */
   submit(){
+
+    //Guardamos toda la información en el ticket de reserva
+    this.saveEventInfo()
     this.stepService.changeStepValue(4);
     this.changeSheduleEvent = true;
+    this.saveEventOnCalendar();
   }
 
   /**
@@ -90,8 +107,6 @@ export class EventComponent implements OnInit{
    * @returns No retorna nada, solo genera la lista de horas de finalización para cada hora de inicio
    */
   public endTimes(event: any){
-    console.log(event.value);
-    
     //Se borra cualquier elemento que ya exista primero
     this.endHours.splice(0, this.endHours.length); 
     
@@ -119,25 +134,46 @@ export class EventComponent implements OnInit{
   } 
 
   //Método de testeo para el formateo de horas
-  algo(){
+  public getFormatDate(){
     //obtengo la fecha seleccionada
     //se debe de tener al  inicio: T00:00:00-05:00 Y para la hora final T23:59:59.999999-05:00
     const fecha = new Date(this.eventForm.controls['date']?.value).toISOString().split('T');
     const fechaInicio = `${fecha[0]}T00:00:00-05:00`
     const fechaFinal = `${fecha[0]}T23:59:59.999999-05:00`
-    console.log({fechaInicio, fechaFinal});
     const token = localStorage.getItem('token') || '';
-    this.eventService.getEvents({token, dates:[fechaInicio, fechaFinal], type:'A' }).subscribe(
+    this.eventService.getEvents({token, dates:[fechaInicio, fechaFinal], type:this.typeService }).subscribe(
       {
         next: hours  =>{
           this.start = hours.events_hours;
-          console.log(this.start)
         }
       }
     )
-    // console.log(`la fecha seleccionada ${fecha}`);
-    
-    // console.log(`seleccionada la fecha ${this.eventForm.controls['date']?.value}`);
-    
   }
+
+  /**
+   * Método para guarda la información ingresada en este punto del formulario.
+   */
+  public saveEventInfo(){
+    const event = {
+      title: this.eventForm.controls['title'].value,
+      people: this.eventForm.controls['people'].value,
+      date: new Date(this.eventForm.controls['date']?.value).toISOString().split('T')[0],
+      start: this.eventForm.controls['start'].value['hours'],
+      end: this.eventForm.controls['end'].value['hour']
+    }
+
+    this.ticket.reservationTicket.event = {...event };
+    this.ticket.saveOnLocalStorage();
+  }
+
+  public saveEventOnCalendar(){
+    const token = localStorage.getItem('token') || ''
+    const data = {
+      title: this.Ticket.event.title,
+      dates: [`${this.Ticket.event.date}T0${this.Ticket.event.start.slice(0,4)}:00-05:00`,`${this.Ticket.event.date}T0${this.Ticket.event.end.slice(0,4)}:00-05:00`],
+      emails: [ this.Ticket.personalInformation.email ]
+    }
+    this.eventService.saveEvent({token, data}).subscribe(res => console.log)
+  }
+
 }
