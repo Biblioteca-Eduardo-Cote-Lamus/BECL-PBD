@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter } from '@angular/core';
 import { StepService } from 'src/app/shared/services/step.service';
 import { ReservationTicketService } from '../../services/reservation-ticket.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { EventsService } from '../../services/events.service';
 import { EventsHour } from 'src/app/data/models/events.model';
 import { holidays } from 'src/app/data/const/holidays.const';
-
+import Swal from 'sweetalert2'
 
 @Component({
   selector: 'app-event',
@@ -16,10 +16,12 @@ export class EventComponent implements OnInit{
 
   //Variable para controlar el step 4
   private _scheduleEvent = false;
+
   //Varibales para controlar la fecha minima (siempre el dia actual) y la fecha máxima (sin limites)
   public minDate: Date = new Date();
   public maxDate!: Date 
-
+  private _selectFDate!: Date;
+  
   // Variable para testar la respueta del back 
   public start: EventsHour[] = []
 
@@ -29,7 +31,7 @@ export class EventComponent implements OnInit{
   //Formulario reactivo para el control de la informacion del evento
   public eventForm: FormGroup = this.fb.group({
     title: [ , [Validators.required] ],
-    people: [ , [ Validators.required, Validators.min(50)] ],
+    people: [ , [ Validators.required] ],
     date:  [ Date , [Validators.required ] ],
     start: [, [Validators.required] ],
     end: [, [Validators.required] ]
@@ -43,7 +45,7 @@ export class EventComponent implements OnInit{
   ){}
 
   ngOnInit(): void {
-    
+    this.eventForm.controls['people'].setValidators(Validators.min(this.setMinPeopleValitador()));
   }
 
   get sheduleEvent(){
@@ -62,8 +64,6 @@ export class EventComponent implements OnInit{
   get disableDates(): Date[]{
     return holidays
   }
-
-
 
   set changeSheduleEvent(value: boolean){
     this._scheduleEvent = value;
@@ -133,18 +133,46 @@ export class EventComponent implements OnInit{
     this.eventForm.controls['end'].setValue(' ', {emitEvent: false})
   } 
 
+  saveDate(){
+    this._selectFDate = new Date(this.eventForm.controls['date']?.value);
+  }
+
   //Método de testeo para el formateo de horas
   public getFormatDate(){
+
+    //Validamos si se volvio a seleccionar la misma fecha para evitar tener que volver a hacer la petición. 
+    if(this._selectFDate != null &&  (this._selectFDate.getTime() == new Date(this.eventForm.controls['date']?.value).getTime()))
+      return
+
+    //limpio lo que tenga seleccionado antes en las horas de inicio
+    if(this.start.length > 0)
+      this.start.length = 0;  
     //obtengo la fecha seleccionada
     //se debe de tener al  inicio: T00:00:00-05:00 Y para la hora final T23:59:59.999999-05:00
     const fecha = new Date(this.eventForm.controls['date']?.value).toISOString().split('T');
     const fechaInicio = `${fecha[0]}T00:00:00-05:00`
     const fechaFinal = `${fecha[0]}T23:59:59.999999-05:00`
+    
+    //obtengo el token del localStorage
     const token = localStorage.getItem('token') || '';
+
     this.eventService.getEvents({token, dates:[fechaInicio, fechaFinal], type:this.typeService }).subscribe(
       {
         next: hours  =>{
-          this.start = hours.events_hours;
+          if (hours.length > 0){
+            this.start = hours;
+            this.saveDate();
+          }
+          else{
+            Swal.fire({
+              title: '¡Error!',
+              text: `Lo sentimos, pero paraece ser que para el ${fecha[0]} no hay espacios disponibles para realizar la solicitud. Intente con un nuevo día.`,
+              icon: 'error',
+              confirmButtonText: 'Aceptar'
+            })
+            this.eventForm.controls['date'].setValue(null, {eventEmitter: false})
+          } 
+
         }
       }
     )
@@ -166,6 +194,9 @@ export class EventComponent implements OnInit{
     this.ticket.saveOnLocalStorage();
   }
 
+  /**
+   * Método para extraer la información del ticket y enviarla a agendar.
+   */
   public saveEventOnCalendar(){
     const token = localStorage.getItem('token') || ''
     const data = {
@@ -174,6 +205,39 @@ export class EventComponent implements OnInit{
       emails: [ this.Ticket.personalInformation.email ]
     }
     this.eventService.saveEvent({token, data}).subscribe(res => console.log)
+  }
+
+  /**
+   * Método para determinar si un input es invalido. Se aplica si el input fue tocado y es invalido. 
+   * @param input nombre del input (control) para aplicar la validación
+   * @returns true o false 
+   */
+  public invalidInput(input: string) {
+    return this.eventForm.controls[input].touched && this.eventForm.controls[input].invalid
+  }
+
+  /**
+   * Método para establecer la cantidad minima de personas para prestar el espacio o servicio.
+   * @returns la cantidad de personas minimas para prestar el espacio o servicio
+   */
+  public setMinPeopleValitador(){
+    const minValidators: {[key:string]: number} = {
+      'A': 50,
+      'S': 20,
+      'ST': 20,
+      'BD': 16
+    }
+    return minValidators[this.ticket.reservationTicket.service.physicalSpace];
+  }
+
+  public getErrorPeopleMessage(){
+    const minPeople = this.setMinPeopleValitador();
+
+    if(this.ticket.reservationTicket.service.type == 'prestamo'){
+      return `Para reservar el espacio solicitado se requieren como minimo ${minPeople} personas;`
+    }
+
+    return `Para realizar la capacitación solicitada se requieren como minimo ${minPeople} personas`;
   }
 
 }

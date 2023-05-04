@@ -9,13 +9,14 @@
         </div>
         <form [formGroup]="eventForm">
             <!-- Contenedor para el titulo del evento -->
-            <div class="mb-4">
+            <div [ngClass]="{'mb-2': invalidInput('title'), 'mb-4': !invalidInput('title')}">
                 <label for="title">Título del evento *</label>
                 <!-- Contenedor para hacer el input group -->
                 <div class="flex">
                     <span class="inline-block p-2 bg-gray-400 rounded-l-md text-white"> {{ typeService  }}: </span>
-                    <input class="block w-full pl-3 border-r border-y rounded-r-md outline-none transition-colors " type="text" placeholder="Realización pruebas saber..." id="title" formControlName="title">
+                    <input [ngClass]="{'border-red-400': invalidInput('title')}" class="block w-full pl-3 border-r border-y rounded-r-md outline-none transition-colors " type="text" placeholder="Realización pruebas saber..." id="title" formControlName="title">
                 </div>
+                <span *ngIf="invalidInput('title')" class="block py-2 text-red-500">El titulo del evento es obligatorio. Ejemplo "Capacitación pruebas saber pro 2023"</span>
             </div>
 
             <!-- Contenedor para asistentes, fecha y horario -->
@@ -29,8 +30,9 @@
                             <span class="inline-block p-2 bg-gray-400 rounded-l-md text-white">
                                 <i class="pi pi-users"></i>    
                             </span>
-                            <input class="block w-full pl-3 border-r border-y rounded-r-md outline-none transition-colors" type="text" placeholder="50" formControlName="people">
+                            <input [ngClass]="{'border-red-400': invalidInput('people')}" class="block w-full pl-3 border-r border-y rounded-r-md outline-none transition-colors" type="text" [placeholder]="setMinPeopleValitador()" formControlName="people">
                         </div>
+                        <span *ngIf="invalidInput('people')" class="block py-2 text-red-500"> {{getErrorPeopleMessage()}} </span>
                     </div>
                     <!-- fecha -->
                     <div class="lg:w-1/2 mb-2">
@@ -43,7 +45,7 @@
                             </div>
                             <div class="w-full p-fluid">
                                 <!-- (onSelect)="algo()"  -->
-                                <p-calendar formControlName="date" (onSelect)="getFormatDate()" [minDate]="minDate" [maxDate]="maxDate" [disabledDates]="disableDates" [disabledDays]="[0]"   dateFormat="dd/mm/yy" ></p-calendar>
+                                <p-calendar formControlName="date" (onSelect)="getFormatDate()"  [minDate]="minDate" [maxDate]="maxDate" [disabledDates]="disableDates" [disabledDays]="[0]"   dateFormat="dd/mm/yy" ></p-calendar>
                             </div>
                         </div>
                     </div>
@@ -57,7 +59,6 @@
                             <span class="inline-block p-2 bg-gray-400 rounded-l-md text-white"> 
                                 <i class="pi pi-clock"></i>
                             </span>
-                            <!-- <input  class="block w-full pl-3 outline-none" type="text" placeholder="06:00 a.m."> -->
                             <div class="w-full p-fluid">
                                 <p-dropdown [options]="start" optionLabel="hours" placeholder="Seleccione la hora de inicio" (onClick)="clearEndHoursList()" (onChange)="endTimes($event)" formControlName="start"></p-dropdown>
                             </div>
@@ -70,9 +71,8 @@
                             <span class="inline-block p-2 bg-gray-400 rounded-l-md text-white"> 
                                 <i class="pi pi-clock"></i>
                             </span>
-                            <!-- <input class="block w-full pl-3 outline-none" type="text" placeholder="08:00 a.m."> -->
                             <div class="w-full p-fluid">
-                                <p-dropdown [options]="endHours" optionLabel="hour" placeholder="Seleccione la hora de finalizacion" formControlName="end" ></p-dropdown>
+                                <p-dropdown [options]="endHours" optionLabel="hour" placeholder="Seleccione la hora de fin" formControlName="end" ></p-dropdown>
                             </div>
                         </div>
                     </div>
@@ -82,8 +82,10 @@
                 <a routerLink="/eventos/personal-info" class="flex py-1 px-3 mt-4 rounded-md text-gray-400"
                    (click) = 'back()'    >Anterior</a>
 
-                <button type="button" class="flex bg-red-600 py-1 px-3 mt-4 rounded-md text-white"
-                        (click)="submit()">Agendar</button>
+                <button type="button" class="flex  py-1 px-3 mt-4 rounded-md text-white transition-colors"
+                        (click)="submit()"
+                        [disabled]="eventForm.invalid"
+                        [ngClass]="{'bg-gray-400 cursor-not-allowed': eventForm.invalid, 'bg-red-600 hover:bg-red-500': eventForm.valid}">Agendar</button>
             </div>
         </form>
     </div>
