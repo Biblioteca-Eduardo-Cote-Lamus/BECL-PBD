@@ -24,21 +24,20 @@ export class EventsService {
   public getEvents( {token, dates, type } : {token:string, dates:string[], type:string} ):Observable<EventsHour[]> {
     return this.http.post<Events>(`${this._eventsUrl}events_PDB/`, {token,dates, type}).pipe(
       map( eventos => {
-        console.log(eventos);
-        
         //obtengo la hora actual
         const today = new Date();
         const currentDate = today.toISOString().split('T')[0];
         //Si la fecha seleccionada es la fecha actual, se filtran las horas mayores a la actual. Ejemplo, si se hace la peticion a las 6am, luego se retorna todas las horas mayores a esta.
         //en caso contrario. se devuelven todas las horas sin problema alguno.
         return currentDate == dates[0].split('T')[0]  ? 
-               eventos.events_hours.filter(i => {
-                  const hourNumber = i.hours.includes('pm') ? parseInt(i.hours[0])+12 : parseInt(i.hours.split(':')[0]);
-                  return type == 'BD' ? hourNumber > today.getHours() && hourNumber <= 17 : hourNumber > today.getHours();
-                }) : type == 'BD' ? eventos.events_hours.filter(i => {
-                  const hourNumber = i.hours.includes('pm') ? parseInt(i.hours[0])+12 : parseInt(i.hours.split(':')[0]);
-                  return  hourNumber <= 17 
-                }) : eventos.events_hours
+              eventos.events_hours.filter( evento => {
+                const hourNumber = evento.hours.includes('pm') ? parseInt(evento.hours[0])+12 : parseInt(evento.hours.split(':')[0]);
+                if(type == 'BD'){
+                  evento.possible = hourNumber < 17 ? [evento.possible[0], evento.possible[1]] : [evento.possible[0]]
+                  return hourNumber > today.getHours() && hourNumber <= 17
+                }
+                return hourNumber > today.getHours();
+              }): eventos.events_hours
       })
     )
   }
