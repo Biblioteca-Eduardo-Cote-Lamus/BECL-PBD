@@ -104,7 +104,7 @@
                 
                 <p class="text-[12px] pb-6">Señor/a {{ Ticket.personalInformation.name | titlecase }}, el evento  {{Ticket.event.title}} , ha sido agendado éxitosamente para {{Ticket.event.date}} en el horario de {{Ticket.event.start}} a {{Ticket.event.end}}. Le agradecemos que sea puntual en la recepción y entrega del espacio solicitado.</p>
                 <p>"Se amable sabiendo"</p>
-
+                <a [href]="finalRes.urlFile" *ngIf="finalRes?.urlFile" target="_blank" class="text-red-400"> {{finalRes.fileName}}  </a>
                 <div class="">
                     <img src="assets/Firma Jefe.png" alt="" class="mx-auto">
                 </div>

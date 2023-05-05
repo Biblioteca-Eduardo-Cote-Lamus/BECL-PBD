@@ -28,6 +28,8 @@ export class EventComponent implements OnInit{
   //Lista de las horas de finalización
   public endHours: any = [ ];
 
+  public finalRes: any;
+
   //Formulario reactivo para el control de la informacion del evento
   public eventForm: FormGroup = this.fb.group({
     title: [ , [Validators.required] ],
@@ -202,9 +204,15 @@ export class EventComponent implements OnInit{
     const data = {
       title: this.Ticket.event.title,
       dates: [`${this.Ticket.event.date}T0${this.Ticket.event.start.slice(0,4)}:00-05:00`,`${this.Ticket.event.date}T0${this.Ticket.event.end.slice(0,4)}:00-05:00`],
-      emails: [ this.Ticket.personalInformation.email ]
+      emails: [ this.Ticket.personalInformation.email ],
+      type: this.Ticket.service.physicalSpace
     }
-    this.eventService.saveEvent({token, data}).subscribe(res => console.log)
+    this.eventService.saveEvent({token, data}).subscribe(
+      { next: res => {
+          this.finalRes = res; 
+          console.log(res);
+      }
+     })
   }
 
   /**
@@ -222,10 +230,10 @@ export class EventComponent implements OnInit{
    */
   public setMinPeopleValitador(){
     const minValidators: {[key:string]: number} = {
-      'A': 50,
-      'S': 20,
+      'A': 30,
+      'S': 5,
       'ST': 20,
-      'BD': 16
+      'BD': 8
     }
     return minValidators[this.ticket.reservationTicket.service.physicalSpace];
   }

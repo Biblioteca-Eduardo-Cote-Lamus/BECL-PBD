@@ -27,24 +27,46 @@ export class EventsService {
         //obtengo la hora actual
         const today = new Date();
         const currentDate = today.toISOString().split('T')[0];
+        const date = dates[0].split('T')[0];
         //Si la fecha seleccionada es la fecha actual, se filtran las horas mayores a la actual. Ejemplo, si se hace la peticion a las 6am, luego se retorna todas las horas mayores a esta.
         //en caso contrario. se devuelven todas las horas sin problema alguno.
-        return currentDate == dates[0].split('T')[0]  ? 
-              eventos.events_hours.filter( evento => {
-                const hourNumber = evento.hours.includes('pm') ? parseInt(evento.hours[0])+12 : parseInt(evento.hours.split(':')[0]);
-                if(type == 'BD'){
-                  evento.possible = hourNumber < 17 ? [evento.possible[0], evento.possible[1]] : [evento.possible[0]]
-                  return hourNumber > today.getHours() && hourNumber <= 17
-                }
-                return hourNumber > today.getHours();
-              }): eventos.events_hours
+
+        return currentDate == date || type == 'BD' ?  this.finalHours(eventos, currentDate, date, type, today.getHours()) : eventos.events_hours
+              
       })
     )
   }
 
   public saveEvent( {token, data}: {token: string, data: any} ): Observable<any>{
-    const {title, dates, emails} = data 
-    return this.http.post<any>(`${this._saveUrl}schedule_PDB/`,  {token, title, dates, emails}).pipe( map( res => res.ok ) )
+    const {title, dates, emails, type} = data 
+    return this.http.post<any>(`${this._eventsUrl}schedule_PDB/`,  {token, title, dates, emails, type})
   }
 
+  public finalHours(eventos: Events, currentDate: string, date: string, type: string, hours: number) {
+
+    return eventos.events_hours.filter(evento => {
+      // obtengo la hora en formato numero y en 24h
+      const hourNumber = evento.hours.includes('pm') ? parseInt(evento.hours[0]) + 12 : parseInt(evento.hours.split(':')[0]);
+      
+      if (currentDate == date) {
+        if (type == 'BD') {
+          evento.possible = hourNumber < 17 ? [evento.possible[0], evento.possible[1]] : [evento.possible[0]];
+          return hourNumber > hours && hourNumber <= 17;
+        }
+        return hourNumber > hours;
+      }
+  
+      if (type == 'BD' && currentDate !== date){
+        evento.possible = hourNumber < 17 ? [evento.possible[0], evento.possible[1]] : [evento.possible[0]];
+        return hourNumber <= 17;
+      }
+      
+      return true;
+    });
+
+  }
+
+
 }
+
+
