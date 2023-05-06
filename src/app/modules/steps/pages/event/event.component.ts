@@ -17,6 +17,8 @@ export class EventComponent implements OnInit{
   //Variable para controlar el step 4
   private _scheduleEvent = false;
 
+  public showLoading = false;
+
   //Varibales para controlar la fecha minima (siempre el dia actual) y la fecha máxima (sin limites)
   public minDate: Date = new Date();
   public maxDate!: Date 
@@ -192,6 +194,9 @@ export class EventComponent implements OnInit{
       end: this.eventForm.controls['end'].value['hour']
     }
 
+    console.log(event.start, event.end);
+    
+
     this.ticket.reservationTicket.event = {...event };
     this.ticket.saveOnLocalStorage();
   }
@@ -201,18 +206,34 @@ export class EventComponent implements OnInit{
    */
   public saveEventOnCalendar(){
     const token = localStorage.getItem('token') || ''
+    const hours = this.getFormatHour();
     const data = {
       title: this.Ticket.event.title,
-      dates: [`${this.Ticket.event.date}T0${this.Ticket.event.start.slice(0,4)}:00-05:00`,`${this.Ticket.event.date}T0${this.Ticket.event.end.slice(0,4)}:00-05:00`],
+      dates: [`${this.Ticket.event.date}T${hours[0]}:00:00-05:00`,`${this.Ticket.event.date}T${hours[1]}:00:00-05:00`],
       emails: [ this.Ticket.personalInformation.email ],
       type: this.Ticket.service.physicalSpace
     }
+    //Despliego la animación de carga.
+    this.showLoading = true;
+    //me suscribo a la respuesta del backend.
     this.eventService.saveEvent({token, data}).subscribe(
       { next: res => {
           this.finalRes = res; 
-          console.log(res);
+          this.showLoading = false;
       }
      })
+  }
+
+  /**
+   * Método para retorna de manera formateada las horas de entrada y salida para el evento.
+   * @returns arreglo con las horas de entrada y salida respectivamente 
+   */
+  private getFormatHour(){
+    //guardo las horas en un arreglo para poder usarlas mas adelante.
+    const simpleHours = [parseInt(this.Ticket.event.start.split(':')[0]), parseInt(this.Ticket.event.end.split(':')[0])];
+    const start = this.Ticket.event.start.includes('pm') ? simpleHours[0]+12 : `${simpleHours[0] > 9  ? simpleHours[0]: '0'+simpleHours[0]}`
+    const end = this.Ticket.event.end.includes('pm') ? simpleHours[1]+12 : `${simpleHours[1] > 9 ? simpleHours[1]: '0'+simpleHours[1]}`
+    return [start, end]
   }
 
   /**
