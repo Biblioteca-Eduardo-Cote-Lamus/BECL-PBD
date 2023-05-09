@@ -38,8 +38,7 @@ export class EventsService {
   }
 
   public saveEvent( {token, data}: {token: string, data: any} ): Observable<any>{
-    const {title, dates, emails, type} = data  
-    return this.http.post<any>(`${this._eventsUrl}schedule_PDB/`,  {token, title, dates, emails, type})
+    return this.http.post<any>(`${this._eventsUrl}schedule_PDB/`,  {token, data})
   }
 
   public finalHours(eventos: Events, currentDate: string, date: string, type: string, hours: number) {

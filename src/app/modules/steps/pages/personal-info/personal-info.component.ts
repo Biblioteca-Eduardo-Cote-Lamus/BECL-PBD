@@ -43,7 +43,7 @@ export class PersonalInfoComponent implements OnInit{
 
   public submit(){
     //guardamos la información el ticketService
-    this.ticket.reservationTicket.personalInformation = {name:this.getNormalName(),email: this.personalInfo.user_email, faculty: this.personalInfo.user_faculty };
+    this.ticket.reservationTicket.personalInformation = {name:this.getNormalName(),email: this.personalInfo.user_email, faculty: this.personalInfo.user_faculty, code: this.personalInfo.user_id };
     this.ticket.saveOnLocalStorage()
     //cambiamos al siguiente paso
     this.stepService.changeStepValue(2);

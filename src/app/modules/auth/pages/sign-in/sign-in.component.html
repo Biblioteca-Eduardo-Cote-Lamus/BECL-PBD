@@ -16,7 +16,7 @@
             <div class=" text-white">
                 <form class="mb-8" autocomplete="off" [formGroup]="loginForm">
                     <div class="flex flex-col mb-5">
-                        <label for="username" class="pb-4">Código administrativo</label>
+                        <label for="username" class="pb-4">Código administrativo o docente</label>
                         <input type="text"  id="username" class="rounded-md py-2 px-4 text-black outline-none transition-colors " placeholder="0001" maxlength="6"
                                formControlName="administrativeCode"
                                [ngClass]="{ 'border-2 border-red-500 invalid' : validateField('administrativeCode') || triggerErrors}">

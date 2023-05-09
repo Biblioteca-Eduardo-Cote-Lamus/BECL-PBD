@@ -9,6 +9,7 @@ export class ReservationTicketService {
   private _reservationTicket = {
     personalInformation: {
       name: '',
+      code: '',
       email: '',
       faculty: ''
     },

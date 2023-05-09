@@ -11,7 +11,7 @@ import { ReservationTicketService } from '../../services/reservation-ticket.serv
 })
 export class ServiceComponent implements OnInit{
 
-  myForm!: FormGroup;
+  serviceForm!: FormGroup;
   service: string = '';
   private _service = {
       type: '',
@@ -24,50 +24,41 @@ export class ServiceComponent implements OnInit{
     private ticket: ReservationTicketService
   )
   {
-      this.myForm = this.fb.group({
+      this.serviceForm = this.fb.group({
         service: ['', [Validators.required] ],
         loan: ['', [Validators.required] ]
       });
 
-      this.myForm.valueChanges.subscribe(value => {
+      this.serviceForm.valueChanges.subscribe(value => {
         this.service = value.service
       })
 
     
    }
+
   ngOnInit(): void {
     
     //consulto si el servicio ya fue seleccionado
     if(this.ticket.reservationTicket.service.type.length > 0)
-      this.myForm.controls['service'].setValue(this.ticket.reservationTicket.service.type, {emitEvent: false})
+      this.serviceForm.controls['service'].setValue(this.ticket.reservationTicket.service.type, {emitEvent: false})
     
       //consulto si el espacio ya fue seleccionado
     if(this.ticket.reservationTicket.service.physicalSpace.length > 0)
-      this.myForm.controls['loan'].setValue(this.ticket.reservationTicket.service.physicalSpace, {emitEvent: false})
+      this.serviceForm.controls['loan'].setValue(this.ticket.reservationTicket.service.physicalSpace, {emitEvent: false})
 
     // Limpio el servicio seleccionado en caso de que en el step 3 se devuelva al 3
     this.changeService()
   }
 
-  changeStep(step: number){
-    this.stepService.changeStepValue(step);
-    console.log(this._service);
-    
+  public changeStep(step: number){
+    this.stepService.changeStepValue(step);  
   }
 
-  submit(){
+  public submit(){
 
-    //si no se ha seleccionado ningún servicio y se le da al botón de enviar, cancelar al redirección. 
-    if(!this.myForm.controls['service']?.value)
-      return 
-
-    //si se selecciono el servicio de prestamo, pero no se selecciono el espacio se le da al botón de enviar, cancelar al redirección. 
-    if(this.myForm.controls['service']?.value === 'prestamo' && !this.myForm.controls['loan'].value)
-      return 
-    
     //obtengo la informacion del formulario y la guardo en el ticket
     this._service = {
-      type: this.myForm.controls['service'].value,
+      type: this.serviceForm.controls['service'].value,
       physicalSpace: this.formatLoanToCalendar()
     }
     
@@ -80,16 +71,28 @@ export class ServiceComponent implements OnInit{
 
   }
 
-  checkedState(value: string){
-    return this.myForm.controls['service']!.value === value || this.myForm.controls['loan']!.value === value
+  public checkNextButton(){
+    //si no se ha seleccionado ningún servicio y se le da al botón de enviar, cancelar al redirección. 
+    if(!this.serviceForm.controls['service']?.value)
+      return true;
+
+    //si se selecciono el servicio de prestamo, pero no se selecciono el espacio se le da al botón de enviar, cancelar al redirección. 
+    if(this.serviceForm.controls['service']?.value === 'prestamo' && !this.serviceForm.controls['loan'].value)
+      return true;
+    
+    return false;
+  }
+
+  public checkedState(value: string){
+    return this.serviceForm.controls['service']!.value === value || this.serviceForm.controls['loan']!.value === value
   }
 
   /**
    * Método para limpiar la selección del servicio en caso de que se haya seleccionado la opción de prestamo
    */
-  changeService(){
+  public changeService(){
     this.service = ''
-    this.myForm.get('service')?.setValue(null , {emitValue: false} )
+    this.serviceForm.get('service')?.setValue(null , {emitValue: false} )
   }
 
   /**
@@ -103,7 +106,7 @@ export class ServiceComponent implements OnInit{
       'trival': 'ST'
     }
 
-    return loanFormats[this.myForm.controls['loan']?.value]  || "BD"
+    return loanFormats[this.serviceForm.controls['loan']?.value]  || "BD"
   }
 
 }

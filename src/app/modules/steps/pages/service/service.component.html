@@ -7,9 +7,9 @@
     </div>
     <!-- contenedor para los check -->
     <div class="">
-        <form autocomplete="false" [formGroup]="myForm">
+        <form autocomplete="false" [formGroup]="serviceForm">
             <!-- contenedor para mostrar las opciones primarias: Si se selecciona préstamo, se cargan las opciones de prestamo -->
-            <div *ngIf="service != 'prestamo' || myForm.controls['service'].value !== 'prestamo'; else loans ">
+            <div *ngIf="service != 'prestamo' || serviceForm.controls['service'].value !== 'prestamo'; else loans ">
                 <!-- checkbox para el prestamo -->
                 <div class="w-full relative  mb-4 rounded-md transition-colors">
                     <input type="radio" class="hidden" formControlName="service" value="prestamo" id="prestamo">
@@ -28,7 +28,7 @@
                         <i class="ml-2 pi pi-desktop lg:text-4xl"></i>
                         <div>
                             <h3 class="font-bold pb-1 lg:text-xl">Capacitación</h3>
-                            <span class="blck lg:text-lg text-gray-400"> {{'auditorio, sala de semilleros y sala virtual' | titlecase}} </span>
+                            <span class="blck lg:text-lg text-gray-400">General de las base de datos.</span>
                         </div>
                     </label>
                 </div>
@@ -67,16 +67,16 @@
                             </label>
                         </div>
         
-                        <div class="w-full relative flex items-center gap-4 mb-4 rounded-md transition-colors">
+                        <!-- <div class="w-full relative flex items-center gap-4 mb-4 rounded-md transition-colors">
                             <input type="radio" id="trival" formControlName="loan" value="trival" class="hidden">
                             <label for="trival" class="w-full flex border rounded-md  items-center gap-4 text-xs cursor-pointer p-4 transition-all" [ngClass]="{'border-yellow-600 card-effect': checkedState('trival')}" >
-                                <!-- icono -->
                                 <div class="">
                                     <i class="text-2xl pi pi-desktop"></i>
                                 </div>
                                 <h3 class="font-bold text-[15px]"> {{'sala trival' | titlecase}}  </h3>
                             </label>
-                        </div>
+                        </div> -->
+
                     </div>
                 </div>
             </ng-template>
@@ -87,7 +87,8 @@
                 <a routerLink="/eventos/personal-info" class="flex py-1 px-3 mt-4 rounded-md text-gray-400"
                         (click)="changeStep(1)">Anterior</a>
 
-                <button type="button" class="flex bg-red-600 py-1 px-3 mt-4 rounded-md text-white"
+                <button type="button" class="flex bg-red-600 py-1 px-3 mt-4 rounded-md text-white" [disabled]="checkNextButton()"
+                        [ngClass]="{'bg-gray-500 cursor-not-allowed' : checkNextButton()}"
                         (click)="submit()">Siguiente</button>
             </div>
         </form>

@@ -116,10 +116,9 @@
                         <span class="font-semibold">{{Ticket.event.start}}</span> a 
                         <span class="font-semibold">{{Ticket.event.end}}.</span> Le agradecemos que sea puntual en la recepción y entrega del espacio solicitado.</p>
                         
-                    <!-- <a [href]="finalRes.urlFile" *ngIf="finalRes?.urlFile" target="_blank" class="text-red-400" [download]="finalRes.urlFile"> {{finalRes.fileName}}  </a> -->
-                    <a href="https://docs.google.com/document/d/1plvPaIKLwgdQA30YvEPTa5lG1w13bVV_qU6-GdPXeIw/edit?usp=sharing" target="_blank" download="mi-archivo.doc" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded border border-blue-700">Descargar archivo</a>
+                    <a [href]="finalRes.urlFile" target="_blank" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded border border-blue-700" > {{finalRes.fileName}}  </a>
 
-                    <div class="">
+                    <div class="mt-4">
                         <img src="assets/Firma Jefe.png" alt="" class="mx-auto">
                     </div>
     

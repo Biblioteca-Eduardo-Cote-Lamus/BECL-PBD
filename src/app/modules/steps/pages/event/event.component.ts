@@ -208,10 +208,23 @@ export class EventComponent implements OnInit{
     const token = localStorage.getItem('token') || ''
     const hours = this.getFormatHour();
     const data = {
-      title: this.Ticket.event.title,
-      dates: [`${this.Ticket.event.date}T${hours[0]}:00:00-05:00`,`${this.Ticket.event.date}T${hours[1]}:00:00-05:00`],
-      emails: [ this.Ticket.personalInformation.email ],
-      type: this.Ticket.service.physicalSpace
+
+      calendar: {
+        title: `${this.Ticket.service.physicalSpace}: ${this.Ticket.event.title}`,
+        dates: [`${this.Ticket.event.date}T${hours[0]}:00:00-05:00`,`${this.Ticket.event.date}T${hours[1]}:00:00-05:00`],
+        emails: [ this.Ticket.personalInformation.email ],
+      },
+
+      support: {
+        type: this.Ticket.service.physicalSpace,
+        date: `${this.Ticket.event.date}`,
+        title: this.Ticket.event.title,
+        dependence: this.Ticket.personalInformation.faculty.toLowerCase(),
+        people: this.Ticket.event.people,
+        name: this.Ticket.personalInformation.name.toLowerCase(),
+        code: this.Ticket.personalInformation.code,
+        hours: [hours[0], [hours[1]]]
+      }
     }
     //Despliego la animación de carga.
     this.showLoading = true;
