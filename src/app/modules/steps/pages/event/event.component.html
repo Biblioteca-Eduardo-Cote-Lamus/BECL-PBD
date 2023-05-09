@@ -99,31 +99,48 @@
             </div>
         </div>
         <ng-template #show>
-            <div class="p-2" >
-                <button (click)="regresar()">Regresar</button>
-                <!-- encabezado -->
+            <div class="px-2">
+                <!-- Encabezado -->
                 <div class="flex items-center justify-center mb-4">
-                    <img src="assets/logo-colors.png" alt="icono de check" class="w-[150px] max-w-[450px]">
+                  <img src="assets/logo-colors.png" alt="icono de check" class="w-44 max-w-full">
                 </div>
-                <!-- texto de agradecimienot -->
-                <div class="text-center">
-                    <h2 class=" text-2xl font-semibold pb-5"> ¡Evento Agendado! </h2>
-                    
-                    <p class="text-[12px] pb-6">Señor/a 
-                        <span class="font-semibold"> {{ Ticket.personalInformation.name | titlecase }}</span>, el evento 
-                        <span class="font-semibold">{{Ticket.event.title}}</span> , ha sido agendado éxitosamente para 
-                        <span class="font-semibold"> {{Ticket.event.date}}</span> en el horario de 
-                        <span class="font-semibold">{{Ticket.event.start}}</span> a 
-                        <span class="font-semibold">{{Ticket.event.end}}.</span> Le agradecemos que sea puntual en la recepción y entrega del espacio solicitado.</p>
-                        
-                    <a [href]="finalRes.urlFile" target="_blank" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded border border-blue-700" > {{finalRes.fileName}}  </a>
-
-                    <div class="mt-4">
-                        <img src="assets/Firma Jefe.png" alt="" class="mx-auto">
+              
+                <!-- Texto de agradecimiento -->
+                <div>
+                  <h2 class="text-2xl font-bold mb-5 text-center">¡Evento Agendado!</h2>
+                  <div class="text-sm mb-6 max-w-lg mx-auto">
+                        <p >
+                            De acuerdo a su solicitud, me permito informar que está autorizado {{getFinalMessage()}} para el día <span class="font-bold">{{ Ticket.event.date[8] + Ticket.event.date[9]  }}</span> de <span class="font-bold"></span> en el horario de <span class="font-bold">{{ Ticket.event.start }}</span> a <span class="font-bold">{{ Ticket.event.end }}</span>. 
+                        </p>
+                        <p class="py-3">
+                            Esté fue agendado a cuenta institucional en Google calendar. En caso de que el evento no se vaya a realizar, por favor comunicarlo a través del correo  a
+                            <a href="mailto:biblioteca@ufps.edu.co" class="text-red-400">biblioteca@ufps.edu.co</a> con anterioridad.
+                        </p>  
+                        <p class="font-semibold" *ngIf="Ticket.service.physicalSpace != 'BD'; else alter ">
+                            Adicionalmente, es importante que descargue el formato que sustenta que se realizo el préstamo del espacio. No necesita imprimirlo.
+                            <button  (click)="download()" 
+                                class="block bg-red-500 hover:bg-red-700 text-white text-center font-normal py-2 px-4 my-3 rounded border  transition-colors w-full">
+                                    Descargar Formato
+                                    <i class="ml-4 pi pi-download"></i>
+                        </button>
+                        </p>
+                        <ng-template #alter>
+                            <p>
+                                Al finalizar la sesión se tomará asistencia a través de los correos institucionales y se enviará certificado digital de la participación. <br>
+                            </p>
+                        </ng-template>
+                        <!-- <p>La sesión se cerrará en {{countDown}}</p> -->
                     </div>
-    
+                    
+                  <!-- Botón para descargar archivo -->
+                  
+              
+                  <!-- Firma del jefe -->
+                  <!-- <div class="mx-auto">
+                    <img src="assets/Firma Jefe.png" alt="Firma del jefe" class="w-64 max-w-full">
+                  </div> -->
                 </div>
-            </div>
+              </div>
         </ng-template>
     </ng-template>
 </div>

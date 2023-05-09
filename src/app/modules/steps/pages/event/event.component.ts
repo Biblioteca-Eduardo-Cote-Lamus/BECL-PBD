@@ -6,6 +6,8 @@ import { EventsService } from '../../services/events.service';
 import { EventsHour } from 'src/app/data/models/events.model';
 import { holidays } from 'src/app/data/const/holidays.const';
 import Swal from 'sweetalert2'
+import { AuthService } from 'src/app/modules/auth/services/auth.service';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-event',
@@ -17,6 +19,7 @@ export class EventComponent implements OnInit{
   //Variable para controlar el step 4
   private _scheduleEvent = false;
 
+  //variable para controlar la pantalla de carga.
   public showLoading = false;
 
   //Varibales para controlar la fecha minima (siempre el dia actual) y la fecha máxima (sin limites)
@@ -30,7 +33,10 @@ export class EventComponent implements OnInit{
   //Lista de las horas de finalización
   public endHours: any = [ ];
 
+  //variable para obtener la respuesta final del backend.
   public finalRes: any;
+
+  private _countdown = 59;
 
   //Formulario reactivo para el control de la informacion del evento
   public eventForm: FormGroup = this.fb.group({
@@ -45,7 +51,9 @@ export class EventComponent implements OnInit{
     private stepService: StepService,
     private eventService: EventsService,
     private ticket: ReservationTicketService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private auth: AuthService,
+    private http: HttpClient
   ){}
 
   ngOnInit(): void {
@@ -67,6 +75,10 @@ export class EventComponent implements OnInit{
 
   get disableDates(): Date[]{
     return holidays
+  }
+
+  get countDown(){
+    return this._countdown
   }
 
   set changeSheduleEvent(value: boolean){
@@ -223,7 +235,7 @@ export class EventComponent implements OnInit{
         people: this.Ticket.event.people,
         name: this.Ticket.personalInformation.name.toLowerCase(),
         code: this.Ticket.personalInformation.code,
-        hours: [hours[0], [hours[1]]]
+        hours: [this.Ticket.event.start, this.Ticket.event.end]
       }
     }
     //Despliego la animación de carga.
@@ -233,6 +245,7 @@ export class EventComponent implements OnInit{
       { next: res => {
           this.finalRes = res; 
           this.showLoading = false;
+          // this.startTimer();
       }
      })
   }
@@ -282,4 +295,46 @@ export class EventComponent implements OnInit{
     return `Para realizar la capacitación solicitada se requieren como minimo ${minPeople} personas`;
   }
 
+  /**
+   * Método que retorna el mensaje de cierre del evento agendado.
+   * @returns mensaje final acorde al tipo de evento
+   */
+  public getFinalMessage(){
+    const message: {[key:string]: string} = {
+      'A': 'el préstamo del auditorio',
+      'S' : 'el préstamo de la sala de semilleros',
+      'BD': 'la capacitación en las base de datos'
+    }
+
+    return message[this.Ticket.service.physicalSpace]
+  }
+
+  public startTimer(){
+    const interval = setInterval(() => {
+      if(this._countdown > 0) {
+        this._countdown--;
+      } else {
+        this.auth.logout();
+        clearInterval(interval);
+      }
+    }, 1000);
+
+  }
+
+  download(){
+    this.http.post('http://localhost:8000/download/',{name: this.finalRes.fileName, type: 'A'} ,{ responseType: 'blob' }).subscribe((response: any) => {
+      console.log(response);
+      
+      const blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+      const downloadUrl = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = downloadUrl;
+      link.download = this.finalRes.fileName;
+      link.click();
+      setTimeout(() => {
+        URL.revokeObjectURL(downloadUrl); // libera la memoria utilizada por el objeto URL
+        link.remove(); // elimina el enlace del DOM
+      }, 1000);
+    });
+  }
 }

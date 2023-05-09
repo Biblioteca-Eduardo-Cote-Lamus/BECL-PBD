@@ -5,6 +5,7 @@ import { BehaviorSubject, Observable, map, tap } from 'rxjs';
 import { Token } from 'src/app/data/interfaces/token.interface';
 import { Usuario } from 'src/app/data/interfaces/usuario.interface';
 import { enviroment } from 'src/app/environments/environment.development';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +26,8 @@ export class AuthService {
   private baseUrl = enviroment.baseUrlLocal;
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private router: Router
   ) { 
     this.jwtHelper = new JwtHelperService();
     this.currentUserBehavior = new BehaviorSubject<Usuario>({} as Usuario);
@@ -59,7 +61,7 @@ export class AuthService {
 
   //Método para menejar el cierre de sesión.
   logout(){
-
+    this.router.navigate(['/auth'])
   }
 
   get isLogin(){
