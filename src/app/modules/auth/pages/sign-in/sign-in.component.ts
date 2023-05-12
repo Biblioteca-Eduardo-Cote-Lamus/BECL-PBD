@@ -1,8 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Token } from 'src/app/data/interfaces/token.interface';
 import { Router } from '@angular/router';
 
 @Component({
@@ -39,7 +37,10 @@ export class SignInComponent {
     private authService: AuthService,
     private router: Router
   ) { 
-    localStorage.clear()
+    localStorage.removeItem('token')
+    localStorage.removeItem('user')
+    localStorage.removeItem('step')
+    localStorage.removeItem('ticket')
   }
 
   validateField(control: string){
@@ -51,8 +52,10 @@ export class SignInComponent {
   }
 
   submit(){
-    if(this.validateNoTouchedInput('administrativeCode') && this.validateNoTouchedInput('password'))
+    if((this.validateNoTouchedInput('administrativeCode') && this.validateNoTouchedInput('password')) || this.loginForm.invalid){
       this.triggerErrors = true;
+      return
+    }
       
     const username = this.loginForm.controls['administrativeCode'].value;
     const password = this.loginForm.controls['password'].value;

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, map} from 'rxjs';
+import { Observable, map, tap} from 'rxjs';
 import { Events, EventsHour } from 'src/app/data/models/events.model';
 import { enviroment } from 'src/app/environments/environment.development';
 
@@ -40,8 +40,13 @@ export class EventsService {
   public saveEvent( {token, data}: {token: string, data: any} ): Observable<any>{
     return this.http.post<any>(`${this._eventsUrl}schedule_PDB/`,  {token, data})
   }
+  
+  public downloadDocument({name, type}: {name: string, type: string}){
+    return this.http.post(`${this._eventsUrl}download/`, {name, type}, { responseType: 'blob' } )
+  }
 
-  public finalHours(eventos: Events, currentDate: string, date: string, type: string, hours: number) {
+
+  private finalHours(eventos: Events, currentDate: string, date: string, type: string, hours: number) {
 
     return eventos.events_hours.filter(evento => {
       // obtengo la hora en formato numero y en 24h

@@ -71,4 +71,9 @@ export class AuthService {
   private saveOnLocalStorage(user: Usuario){
     localStorage.setItem('user', JSON.stringify(user));
   }
+
+  public validateToken(){
+    this.token = localStorage.getItem('token')!
+    return ! this.jwtHelper.isTokenExpired(this.token);
+  }
 }

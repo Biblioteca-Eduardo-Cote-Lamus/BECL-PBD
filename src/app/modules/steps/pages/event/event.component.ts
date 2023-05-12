@@ -7,7 +7,7 @@ import { EventsHour } from 'src/app/data/models/events.model';
 import { holidays } from 'src/app/data/const/holidays.const';
 import Swal from 'sweetalert2'
 import { AuthService } from 'src/app/modules/auth/services/auth.service';
-import { HttpClient } from '@angular/common/http';
+import { semilleros } from 'src/app/data/const/semilleros.const';
 
 @Component({
   selector: 'app-event',
@@ -36,7 +36,13 @@ export class EventComponent implements OnInit{
   //variable para obtener la respuesta final del backend.
   public finalRes: any;
 
-  private _countdown = 59;
+  //variable para llevar el control del cierre de sesión
+  private _countdown = 45;
+
+  public departments = [...semilleros];
+
+  public seedbeds = this.departments[0].seedbeds;
+  
 
   //Formulario reactivo para el control de la informacion del evento
   public eventForm: FormGroup = this.fb.group({
@@ -52,12 +58,13 @@ export class EventComponent implements OnInit{
     private eventService: EventsService,
     private ticket: ReservationTicketService,
     private fb: FormBuilder,
-    private auth: AuthService,
-    private http: HttpClient
+    private auth: AuthService
   ){}
 
   ngOnInit(): void {
     this.eventForm.controls['people'].setValidators(Validators.min(this.setMinPeopleValitador()));
+    if(this.Ticket.service.physicalSpace == 'S')
+      this.eventForm.controls['title'].setValue(this.seedbeds[0], {eventEmitter: false})
   }
 
   get sheduleEvent(){
@@ -86,12 +93,12 @@ export class EventComponent implements OnInit{
   }
 
   //Método para regresar al step 2
-  back(){
+  public back(){
     this.stepService.changeStepValue(2);
   }
 
   //Método para regresar del step 4 al 3
-  regresar(){
+  public regresar(){
     this.changeSheduleEvent = false;
     this.stepService.changeStepValue(3);
   }
@@ -99,7 +106,7 @@ export class EventComponent implements OnInit{
   /**
    * Método para enviar la información al backend y que se agende el evento/capacitación 
    */
-  submit(){
+  public submit(){
 
     //Guardamos toda la información en el ticket de reserva
     this.saveEventInfo()
@@ -149,7 +156,7 @@ export class EventComponent implements OnInit{
     this.eventForm.controls['end'].setValue(' ', {emitEvent: false})
   } 
 
-  saveDate(){
+  public saveDate(){
     this._selectFDate = new Date(this.eventForm.controls['date']?.value);
   }
 
@@ -206,9 +213,6 @@ export class EventComponent implements OnInit{
       end: this.eventForm.controls['end'].value['hour']
     }
 
-    console.log(event.start, event.end);
-    
-
     this.ticket.reservationTicket.event = {...event };
     this.ticket.saveOnLocalStorage();
   }
@@ -219,10 +223,11 @@ export class EventComponent implements OnInit{
   public saveEventOnCalendar(){
     const token = localStorage.getItem('token') || ''
     const hours = this.getFormatHour();
+    const title = `${this.Ticket.service.physicalSpace}: ${ this.Ticket.service.physicalSpace == 'S' ? this.eventForm.controls['title'].value['name'] : this.Ticket.event.title } `;
     const data = {
 
       calendar: {
-        title: `${this.Ticket.service.physicalSpace}: ${this.Ticket.event.title}`,
+        title,
         dates: [`${this.Ticket.event.date}T${hours[0]}:00:00-05:00`,`${this.Ticket.event.date}T${hours[1]}:00:00-05:00`],
         emails: [ this.Ticket.personalInformation.email ],
       },
@@ -230,7 +235,7 @@ export class EventComponent implements OnInit{
       support: {
         type: this.Ticket.service.physicalSpace,
         date: `${this.Ticket.event.date}`,
-        title: this.Ticket.event.title,
+        title: title.substring(3),
         dependence: this.Ticket.personalInformation.faculty.toLowerCase(),
         people: this.Ticket.event.people,
         name: this.Ticket.personalInformation.name.toLowerCase(),
@@ -238,6 +243,7 @@ export class EventComponent implements OnInit{
         hours: [this.Ticket.event.start, this.Ticket.event.end]
       }
     }
+    console.log(data)
     //Despliego la animación de carga.
     this.showLoading = true;
     //me suscribo a la respuesta del backend.
@@ -309,6 +315,9 @@ export class EventComponent implements OnInit{
     return message[this.Ticket.service.physicalSpace]
   }
 
+  /**
+   * Método para iniciar el contador de cierre de sesión cuando el usuario descargue el documento. 
+   */
   public startTimer(){
     const interval = setInterval(() => {
       if(this._countdown > 0) {
@@ -321,20 +330,42 @@ export class EventComponent implements OnInit{
 
   }
 
-  download(){
-    this.http.post('http://localhost:8000/download/',{name: this.finalRes.fileName, type: 'A'} ,{ responseType: 'blob' }).subscribe((response: any) => {
-      console.log(response);
-      
-      const blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+  /**
+   * Método para hacer el llamado al backend y descargar el documento.
+   */
+  public download(){
+
+    //extramemos la data necesaria del hacer el llamado. 
+    const data = {
+      name: this.finalRes.nameFile,
+      type: this.Ticket.service.physicalSpace
+    }
+
+    this.eventService.downloadDocument( data ).subscribe((response: any) => {
+      // creamos el objto blob, se le pasa la response del backend y se le configura el type 'application/pdf' para que se descargue en pdf.
+      const blob = new Blob([response], { type: 'application/pdf' });
+
+      //se crea una url para el blol
       const downloadUrl = URL.createObjectURL(blob);
-      const link = document.createElement('a');
+      const link = document.createElement('a'); //se crea el elemento virtual y se le asigna el evento click para que se descargue el doc
       link.href = downloadUrl;
-      link.download = this.finalRes.fileName;
+      link.download = this.finalRes.nameFile;
       link.click();
+
+      //un timeout para eliminar el objeto pasado 1segundo. 
       setTimeout(() => {
         URL.revokeObjectURL(downloadUrl); // libera la memoria utilizada por el objeto URL
         link.remove(); // elimina el enlace del DOM
       }, 1000);
+
     });
+  }
+
+  public selectSeedbeds(event: any){
+    const { department,  seedbeds } = event.value
+    console.log(department);
+    
+    this.seedbeds = seedbeds;
+    this.Ticket.personalInformation.faculty = department
   }
 }

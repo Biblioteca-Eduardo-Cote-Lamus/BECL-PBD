@@ -1,7 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { IStep } from 'src/app/data/interfaces/step-item.interface';
 import { StepService } from '../../../../shared/services/step.service';
 import { Router } from '@angular/router';
+import { AuthService } from 'src/app/modules/auth/services/auth.service';
+
 
 @Component({
   selector: 'app-step-container',
@@ -29,16 +31,18 @@ export class StepContainerComponent implements OnInit{
     }
   ];
 
+  private confirmExit = false;
+
   currentStep = 1;
   // routes = [['/eventos/personal-info'], ['/eventos/service'],['/eventos/event']]
   constructor(
     private stepService: StepService,
-    private router: Router
+    private router: Router,
+    private authS: AuthService
   ){ }
 
 
   ngOnInit(): void {
-    
     //Pregunto si ya se guardo el step y lo leo  
     this.currentStep = localStorage.getItem('step') ? parseInt(localStorage.getItem('step')!) : 1;
     
@@ -47,8 +51,12 @@ export class StepContainerComponent implements OnInit{
     
     //me suscribo al cambio de paso para que se renderice
     this.stepService.currentStep.subscribe({next: value => this.currentStep = value})
+
+    // Validamos 
+    if(! this.authS.validateToken())
+      this.router.navigate(['/auth'])
   }
-  
+
 
   // saveCurrentStep(){
   //   // Guardo el estado actual del step

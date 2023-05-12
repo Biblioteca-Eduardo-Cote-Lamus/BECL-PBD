@@ -9,7 +9,7 @@
         </div>
         <form [formGroup]="eventForm">
             <!-- Contenedor para el titulo del evento -->
-            <div [ngClass]="{'mb-2': invalidInput('title'), 'mb-4': !invalidInput('title')}">
+            <div [ngClass]="{'mb-2': invalidInput('title'), 'mb-4': !invalidInput('title')}" *ngIf="Ticket.service.physicalSpace == 'A'; else semillero">
                 <label for="title">Título del evento *</label>
                 <!-- Contenedor para hacer el input group -->
                 <div class="flex">
@@ -18,6 +18,36 @@
                 </div>
                 <span *ngIf="invalidInput('title')" class="block py-2 text-red-500">El titulo del evento es obligatorio. Ejemplo "Capacitación pruebas saber pro 2023"</span>
             </div>
+
+            <!-- Contenedor para la selección de semilleros. -->
+            <ng-template #semillero>
+                <div class="mb-3">
+                    <!-- horario de inicio -->
+                    <div class="mb-2 ">
+                        <label for="">Departamento del semillero * </label>
+                        <div class="flex" >
+                            <span class="inline-block p-2 bg-gray-400 rounded-l-md text-white"> 
+                                <i class="pi pi-sitemap"></i>
+                            </span>
+                            <div class="w-full p-fluid">
+                                <p-dropdown [options]="departments" optionLabel="department" [filter]="true" filterBy="department" (onChange)="selectSeedbeds($event)" ></p-dropdown>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="w-full mb-4">
+                    <label for="">Semillero de Investigación *</label>
+                    <div class="flex">
+                        <span class="inline-block p-2 bg-gray-400 rounded-l-md text-white"> 
+                            <i class="pi pi-verified"></i>
+                        </span>
+                        <div class="w-full p-fluid">
+                            <p-dropdown [options]="seedbeds" optionLabel="name" [filter]="true" filterBy="name"  panelStyleClass="overflow-x-scroll" formControlName="title" ></p-dropdown>
+                        </div>
+                    </div>
+                </div>
+            </ng-template>
 
             <!-- Contenedor para asistentes, fecha y horario -->
             <div class="w-full">
@@ -51,7 +81,7 @@
                     </div>
                 </div>
                 <!-- contenedor para los horarios -->
-                <div class="mb-4 gap-8 lg:flex">
+                <div class="gap-8 lg:flex">
                     <!-- horario de inicio -->
                     <div class="mb-2 lg:w-1/2 ">
                         <label for="">Hora de inicio *</label>
@@ -129,7 +159,7 @@
                                 Al finalizar la sesión se tomará asistencia a través de los correos institucionales y se enviará certificado digital de la participación. <br>
                             </p>
                         </ng-template>
-                        <!-- <p>La sesión se cerrará en {{countDown}}</p> -->
+                        <p>La sesión se cerrará en {{countDown}}</p>
                     </div>
                     
                   <!-- Botón para descargar archivo -->
