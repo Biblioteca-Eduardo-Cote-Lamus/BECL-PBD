@@ -1,0 +1,102 @@
+<div class="w-full min-h-[100%] bg-effect flex items-center p-4">
+    <div class="flex flex-col items-center justify-center bg-white w-11/12 max-w-[950px] mx-auto rounded-lg md:flex-row">
+       
+        <!-- contenedor de la img -->
+        <div >
+            <img src="assets/forgot-p.jpg" alt="imagen de recuperación de contraseña" class=" rounded-t-lg w-full max-w-[400px] mx-auto md:rounded-l-lg">
+        </div>
+
+        <!-- contenedor del encabezado -->
+        <div class=" text-center pt-0 pb-6 px-4" >
+             <!-- contenedor del titulo  -->
+            <div class="mb-4">
+                <h1 class="font-bold text-xl mb-3 lg:text-[40px] lg:leading-[1.3] lg:mb-6 lg:px-2"> Recuperar Contraseña</h1>
+                <p class="text-sm w-full max-w-[500px]"> {{ getSubtitle() }} </p>
+            </div>
+             <!-- contenedor del formulario  -->
+            <div *ngIf="! triggerLoad && !showCode && ! showChangePassword">
+                <div class="my-2 relative lg:mb-3">
+                    <div class="flex items-center border-black border-b rounded-b-md px-4" [ngClass]="{'my-4 border-b-red-500': !validEmail}">
+                        <span class="pr-4"><i class="pi pi-user"></i></span>
+                        <input type="email" placeholder="example@ufps.edu.co" class="block w-[95%]  outline-none mx-auto py-2" (input)="validateEmail()" [(ngModel)]="email">
+                        <span class="text-red-400" [ngClass]="{'hidden': validEmail}"><i class="pi pi-info-circle"></i></span>
+                    </div>
+                    <span class="text-left text-red-500 block  px-4 opacity-0" [ngClass]="{'opacity-100': !validEmail}">Formato de correo invalido.</span>
+                </div>
+                <button (click)="submit()" type="button" class="bg-red-500 px-8 py-2 rounded-lg text-white ">Enviar código de verificación</button>
+            </div>
+            
+            <!-- contenedor de los inputs para el codigo de verificación -->
+            <div *ngIf="showCode && !triggerLoad">
+                <div class="mb-6" >
+                    <form action="" [formGroup]="otpForm"  (ngSubmit)="validateCode()">
+                        <div class="flex justify-center gap-4 mb-4">
+                            <div class="w-12 h-12">
+                                <input #digit1Input formControlName="digit1"  type="text" class="text-center w-full h-full border-black border rounded-md" autofocus>
+                            </div>
+                            <div class="w-12 h-12">
+                                <input #digit2Input formControlName="digit2"  type="text" class="text-center w-full h-full border-black border rounded-md">
+                            </div>
+                            <div class="w-12 h-12">
+                                <input #digit3Input formControlName="digit3"  type="text" class="text-center w-full h-full border-black border rounded-md">
+                            </div>
+                            <div class="w-12 h-12">
+                                <input #digit4Input formControlName="digit4"  type="text" class="text-center w-full h-full border-black border rounded-md">
+                            </div>
+                            <div class="w-12 h-12">
+                                <input #digit5Input formControlName="digit5"  type="text" class="text-center w-full h-full border-black border rounded-md">
+                            </div>
+                            <div class="w-12 h-12">
+                                <input #digit6Input formControlName="digit6"  type="text"  class="text-center w-full h-full border-black border rounded-md">
+                            </div>
+                        </div>
+                        <button type="submit" class="bg-red-500 px-8 py-2 rounded-lg text-white ">Validar</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Contenedor para cambiar las contraseñas -->
+            <div *ngIf="showChangePassword && !triggerLoad">
+                <div class="mt-4">
+                    <form [formGroup]="passwordsForm" (ngSubmit)="changePassword()">
+                        <div class="p-fluid mb-5">
+                            <div class="p-float-label">
+                                <p-password [ngClass]="{'ng-invalid ng-dirty': passwordsForm.controls['newPassword'].invalid}"
+                                            [feedback]="true" [toggleMask]="true"  inputStyleClass="rounded-md" id="newpassword" formControlName="newPassword" promptLabel="Una contraseña segura hace la diferencia" weakLabel="Débil " mediumLabel="Medio" strongLabel="Fuerte">
+                                    <ng-template pTemplate="header">
+                                        <h6 class="text-left py-3">Digita la contraseña nueva</h6>
+                                    </ng-template>
+                                    <ng-template pTemplate="footer">
+                                        <p class="my-2 font-bold">Recomendaciones</p>
+                                        <ul class="pl-2 ml-2 mt-0 list-disc text-left" style="line-height: 1.5">
+                                            <li>Mínimo 8 caracteres</li>
+                                            <li>Máximo 16 caracteres</li>
+                                            <li>Al menos una mayúscula</li>
+                                            <li>Al menos un número</li>
+                                            <li>Al menos un carácter especial</li>
+                                        </ul>
+                                    </ng-template>
+                                </p-password>
+                                <label for="newpassword">Nueva contraseña</label>
+                            </div>
+                        </div>
+                        <div class="p-fluid mb-5">
+                            <div class="p-float-label">
+                                <p-password [feedback]="false" [toggleMask]="true"  inputStyleClass="rounded-md" id="newpassword" formControlName="confirmPassword" [ngClass]="{'ng-invalid ng-dirty': wrongPassword}"></p-password>
+                                <label for="newpassword">Confirmar contraseña</label>
+                            </div>
+                            <span class="block opacity-0 text-left text-red-500 p-1 px-2" [ngClass]="{'opacity-100': wrongPassword}">Las contraseñas no coinciden.</span>
+                        </div>
+                        <button  type="submit" class="bg-red-500 px-8 py-2 rounded-lg text-white ">Enviar código de verificación</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- contenedor del loader. -->
+            <div class="flex flex-col items-center justify-center" *ngIf="triggerLoad">
+                <div class=" loader" ></div>
+            </div>
+            
+        </div>
+    </div>
+</div>
