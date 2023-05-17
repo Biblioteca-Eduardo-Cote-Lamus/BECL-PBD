@@ -38,17 +38,19 @@ export class AuthService {
   }
 
     //método para manejar el inicio de sesión. 
-  login(username: string, password: string): Observable<Token>{
-    return this.http.post<Token>(this.baseUrl+"login/", { username, password }).pipe(
-      tap( (res:Token) => {
-        //obtengo el token de la respuesta y se guarda momentaneamente en el localStorage
-        this.token = res.token;
-        localStorage.setItem('token', this.token)
-        //si no son las credenciales o hay un error, se mantiene el usuario vacio
+  login(username: string, password: string){
+    return this.http.post(this.baseUrl+"login/", { username, password }).pipe(
+      tap( (res:any) => {
+        
         if(! res.ok){
           this.currentUserBehavior.next({} as Usuario);
           return;
         }
+
+        //obtengo el token de la respuesta y se guarda momentaneamente en el localStorage
+        this.token = res.token;
+        localStorage.setItem('token', this.token)
+        //si no son las credenciales o hay un error, se mantiene el usuario vacio
         //Caso contrario se crea el objeto
         this.currentUserBehavior.next(this.jwtHelper.decodeToken(this.token)!);
         this.currentUserObservable = this.currentUserBehavior.asObservable();
@@ -64,8 +66,15 @@ export class AuthService {
     this.router.navigate(['/auth'])
   }
 
-  get isLogin(){
-    return this._isLogin
+  public verifyIsUserLogin(){
+    // verifico si el token aun está guardado en el LS
+    const token = localStorage.getItem('token') ?? ''
+
+    //Se valida si es nulo o si el token ya expiro, se sabe que no sirve y se debe de deslogear
+    if(token.length == 0 || this.jwtHelper.isTokenExpired(token))
+      return false
+
+    return true
   }
 
   private saveOnLocalStorage(user: Usuario){
