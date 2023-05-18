@@ -7,14 +7,14 @@
             <h2 class="font-bold text-xl mb-2 md:text-3xl">Datos del Evento</h2>
             <span class="block font-medium text-sm text-gray-400">Ingrese los datos para el evento/capacitacion que se realizará.</span>
         </div>
-        <form [formGroup]="eventForm">
+        <form [formGroup]="eventForm" (ngSubmit)="submit()">
             <!-- Contenedor para el titulo del evento -->
-            <div [ngClass]="{'mb-2': invalidInput('title'), 'mb-4': !invalidInput('title')}" *ngIf="Ticket.service.physicalSpace == 'A'; else semillero">
-                <label for="title">Título del evento *</label>
+            <div [ngClass]="{'mb-2': invalidInput('title'), 'mb-4': !invalidInput('title')}" *ngIf="Ticket.service.physicalSpace == 'A' || Ticket.service.physicalSpace == 'BD'; else semillero">
+                <label for="title">Título del evento *</label> 
                 <!-- Contenedor para hacer el input group -->
                 <div class="flex">
                     <span class="inline-block p-2 bg-gray-400 rounded-l-md text-white"> {{ typeService  }}: </span>
-                    <input [ngClass]="{'border-red-400': invalidInput('title')}" class="block w-full pl-3 border-r border-y rounded-r-md outline-none transition-colors " type="text" placeholder="Realización pruebas saber..." id="title" formControlName="title">
+                    <input pTooltip="Ejemplo: Charlas de ingeneria..." tooltipPosition="top" [ngClass]="{'border-red-400': invalidInput('title')}" class="block w-full pl-3 border-r border-y rounded-r-md outline-none transition-colors " type="text" placeholder="Realización pruebas saber..." id="title" formControlName="title">
                 </div>
                 <span *ngIf="invalidInput('title')" class="block py-2 text-red-500">El titulo del evento es obligatorio. Ejemplo "Capacitación pruebas saber pro 2023"</span>
             </div>
@@ -43,7 +43,7 @@
                             <i class="pi pi-verified"></i>
                         </span>
                         <div class="w-full p-fluid">
-                            <p-dropdown [options]="seedbeds" optionLabel="name" [filter]="true" filterBy="name"  panelStyleClass="overflow-x-scroll" formControlName="title" ></p-dropdown>
+                            <p-dropdown [options]="seedbeds" optionLabel="name" [filter]="true" filterBy="name"  panelStyleClass="overflow-x-scroll" formControlName="title" styleClass="rounded-r-md"></p-dropdown>
                         </div>
                     </div>
                 </div>
@@ -60,9 +60,9 @@
                             <span class="inline-block p-2 bg-gray-400 rounded-l-md text-white">
                                 <i class="pi pi-users"></i>    
                             </span>
-                            <input [ngClass]="{'border-red-400': invalidInput('people')}" class="block w-full pl-3 border-r border-y rounded-r-md outline-none transition-colors" type="text" [placeholder]="setMinPeopleValitador()" formControlName="people">
+                            <input pTooltip="La cantidad de personas a asistir" [ngClass]="{'border-red-400': !controlPeople!['valid']}" class="block w-full pl-3 border-r border-y rounded-r-md outline-none transition-colors" type="number" [placeholder]="setPeopleValitadors()[0]" formControlName="people" [min]="setPeopleValitadors()[0]">
                         </div>
-                        <span *ngIf="invalidInput('people')" class="block py-2 text-red-500"> {{getErrorPeopleMessage()}} </span>
+                        <span *ngIf="!controlPeople!['valid'] && controlPeople!['touched']" class="block py-2 text-red-500"> {{getErrorPeopleMessage()}} </span>
                     </div>
                     <!-- fecha -->
                     <div class="lg:w-1/2 mb-2">
@@ -75,7 +75,7 @@
                             </div>
                             <div class="w-full p-fluid">
                                 <!-- (onSelect)="algo()"  -->
-                                <p-calendar formControlName="date" (onSelect)="getFormatDate()"  [minDate]="minDate" [maxDate]="maxDate" [disabledDates]="disableDates" [disabledDays]="[0]"   dateFormat="dd/mm/yy" ></p-calendar>
+                                <p-calendar pTooltip="Fecha en la que realizara el evento" tooltipPosition="top" formControlName="date" (onSelect)="getFormatDate()"  [minDate]="minDate" [maxDate]="maxDate" [disabledDates]="disableDates" [disabledDays]="[0]"   dateFormat="dd/mm/yy" ></p-calendar>
                             </div>
                         </div>
                     </div>
@@ -90,7 +90,7 @@
                                 <i class="pi pi-clock"></i>
                             </span>
                             <div class="w-full p-fluid">
-                                <p-dropdown [options]="start" optionLabel="hours" placeholder="Seleccione la hora de inicio" (onClick)="clearEndHoursList()" (onChange)="endTimes($event)" formControlName="start"></p-dropdown>
+                                <p-dropdown pTooltip="Hora de inicio del evento" [options]="start" optionLabel="hours" placeholder="Seleccione la hora de inicio" (onClick)="clearEndHoursList()" (onChange)="endTimes($event)" formControlName="start"></p-dropdown>
                             </div>
                         </div>
                     </div>
@@ -102,18 +102,32 @@
                                 <i class="pi pi-clock"></i>
                             </span>
                             <div class="w-full p-fluid">
-                                <p-dropdown [options]="endHours" optionLabel="hour" placeholder="Seleccione la hora de fin" formControlName="end" ></p-dropdown>
+                                <p-dropdown pTooltip="Hora de finalización del evento" tooltipPosition="top" [options]="endHours" optionLabel="hour" placeholder="Seleccione la hora de fin" formControlName="end" ></p-dropdown>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <!-- Contenedor para un segundo encargado -->
+            <div class="mt-4">
+                <div class="flex items-center gap-1 mb-4 pl-1">
+                    <input type="checkbox" name="second" id="second" class="w-4 h-4" formControlName="extra">
+                    <label for="second">Deseo agregar un segundo encargado</label>
+                </div>
+                <div class="card p-fluid" *ngIf="this.eventForm.controls['extra'].value">
+                        <p-chips formControlName="emails" [max]="2" pTooltip="Máximo 2 encargados" separator="@">
+                            <ng-template let-item pTemplate="item"> {{ item }}@ufps.edu.co <i class="pi pi-user ml-2"></i> </ng-template>
+                        </p-chips>
+                </div>
+            </div>
+
+            <!-- Contenedor de los botones para avanzar o agendar -->
             <div class="flex justify-between">
                 <a routerLink="/eventos/personal-info" class="flex py-1 px-3 mt-4 rounded-md text-gray-400"
                    (click) = 'back()'    >Anterior</a>
 
-                <button type="button" class="flex  py-1 px-3 mt-4 rounded-md text-white transition-colors"
-                        (click)="submit()"
+                <button type="submit" class="flex  py-1 px-3 mt-4 rounded-md text-white transition-colors"
                         [disabled]="eventForm.invalid"
                         [ngClass]="{'bg-gray-400 cursor-not-allowed': eventForm.invalid, 'bg-red-600 hover:bg-red-500': eventForm.valid}">Agendar</button>
             </div>
@@ -161,14 +175,11 @@
                         </ng-template>
                         <p>La sesión se cerrará en {{countDown}}</p>
                     </div>
-                    
-                  <!-- Botón para descargar archivo -->
-                  
-              
-                  <!-- Firma del jefe -->
-                  <!-- <div class="mx-auto">
-                    <img src="assets/Firma Jefe.png" alt="Firma del jefe" class="w-64 max-w-full">
-                  </div> -->
+                    <!-- contenedor para cerrar sesion o realizar otra agendamiento -->
+                    <div class="flex justify-center gap-6 " *ngIf="controlDownload">
+                        <button (click)="reset()" class="inline-block px-8 py-1 bg-yellow-500 hover:bg-yellow-600 text-white rounded-md text-center transition-colors">Agendar Evento</button>
+                        <a [routerLink]="['/auth/']" class="inline-block px-8 py-1 bg-red-500 hover:bg-red-600 text-white rounded-md text-center transition-colors">Cerrar sesion <span class="text-[10px]">({{countDown}})</span></a>
+                    </div>
                 </div>
               </div>
         </ng-template>

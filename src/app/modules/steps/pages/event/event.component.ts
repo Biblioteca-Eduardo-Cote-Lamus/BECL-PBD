@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter } from '@angular/core';
+import { Component, OnInit, EventEmitter, OnDestroy } from '@angular/core';
 import { StepService } from 'src/app/shared/services/step.service';
 import { ReservationTicketService } from '../../services/reservation-ticket.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -14,7 +14,7 @@ import { semilleros } from 'src/app/data/const/semilleros.const';
   templateUrl: './event.component.html',
   styleUrls: ['./event.component.css']
 })
-export class EventComponent implements OnInit{
+export class EventComponent implements OnInit, OnDestroy{
 
   //Variable para controlar el step 4
   private _scheduleEvent = false;
@@ -36,13 +36,21 @@ export class EventComponent implements OnInit{
   //variable para obtener la respuesta final del backend.
   public finalRes: any;
 
+  // Variable para almacenar el intervalo para el cierre de sesión
+  private interval!:any;
+  
   //variable para llevar el control del cierre de sesión
   private _countdown = 45;
 
+  // Variable para almacenar los departamentos de los semilleros
   public departments = [...semilleros];
 
+  // Variable para almacenar los semilleros de los departamentos. 
   public seedbeds = this.departments[0].seedbeds;
-  
+
+  // Varible para controlar los botones de cierre de sesion de la pantalla final
+  public controlDownload = true; //por defecto en true para que se deshabiliten los botones
+
 
   //Formulario reactivo para el control de la informacion del evento
   public eventForm: FormGroup = this.fb.group({
@@ -50,7 +58,9 @@ export class EventComponent implements OnInit{
     people: [ , [ Validators.required] ],
     date:  [ Date , [Validators.required ] ],
     start: [, [Validators.required] ],
-    end: [, [Validators.required] ]
+    end: [, [Validators.required] ],
+    extra: [],
+    emails: [   , ]
   });
 
   constructor(
@@ -61,31 +71,49 @@ export class EventComponent implements OnInit{
     private auth: AuthService
   ){}
 
+
+  ngOnDestroy(): void {
+    clearInterval(this.interval);
+  }
+
   ngOnInit(): void {
-    this.eventForm.controls['people'].setValidators(Validators.min(this.setMinPeopleValitador()));
+
+    //detenemos el intervalo por seguridad
+    clearInterval(this.interval);
+
+    const validators = this.setPeopleValitadors()
+
+    this.eventForm.controls['people'].setValidators(Validators.max(validators[1]));
+
+    this.eventForm.controls['people'].updateValueAndValidity();
+
     if(this.Ticket.service.physicalSpace == 'S')
       this.eventForm.controls['title'].setValue(this.seedbeds[0], {eventEmitter: false})
   }
 
-  get sheduleEvent(){
+  public get sheduleEvent(){
     return this._scheduleEvent;
   }
 
-  get typeService(){
+  public get typeService(){
     // this.ticket.reservationTicket.service.physicalSpace
     return ! localStorage.getItem('ticket') ? this.ticket.reservationTicket.service.physicalSpace : JSON.parse(localStorage.getItem('ticket')!)['service']['physicalSpace']
   }
 
-  get Ticket(){
+  public get Ticket(){
     return {...this.ticket.reservationTicket}
   }
 
-  get disableDates(): Date[]{
+  public get disableDates(): Date[]{
     return holidays
   }
 
-  get countDown(){
+  public get countDown(){
     return this._countdown
+  }
+
+  public get controlPeople(){
+    return this.eventForm.get('people')
   }
 
   set changeSheduleEvent(value: boolean){
@@ -221,15 +249,23 @@ export class EventComponent implements OnInit{
    * Método para extraer la información del ticket y enviarla a agendar.
    */
   public saveEventOnCalendar(){
-    const token = localStorage.getItem('token') || ''
-    const hours = this.getFormatHour();
+    const token = localStorage.getItem('token') || '' //obtengo el token
+
+    const hours = this.getFormatHour(); //parse las horas la formato correcto
+
+    // le doy formato al titulo 
     const title = `${this.Ticket.service.physicalSpace}: ${ this.Ticket.service.physicalSpace == 'S' ? this.eventForm.controls['title'].value['name'] : this.Ticket.event.title } `;
+    
+    //formateo cada email con la extension @ufps.edu.co
+    const emails = this.eventForm.controls['extra'].value ? [...this.getEmialsFormat(), this.Ticket.personalInformation.email] : [this.Ticket.personalInformation.email]
+    
+    // Añado todo a la data
     const data = {
 
       calendar: {
         title,
         dates: [`${this.Ticket.event.date}T${hours[0]}:00:00-05:00`,`${this.Ticket.event.date}T${hours[1]}:00:00-05:00`],
-        emails: [ this.Ticket.personalInformation.email ],
+        emails
       },
 
       support: {
@@ -243,17 +279,25 @@ export class EventComponent implements OnInit{
         hours: [this.Ticket.event.start, this.Ticket.event.end]
       }
     }
-    console.log(data)
+
+
     //Despliego la animación de carga.
     this.showLoading = true;
-    //me suscribo a la respuesta del backend.
+
+    // me suscribo a la respuesta del backend.
     this.eventService.saveEvent({token, data}).subscribe(
       { next: res => {
           this.finalRes = res; 
           this.showLoading = false;
-          // this.startTimer();
+
+          if(data.support.type == 'BD')
+            this.startTimer();
       }
      })
+  }
+
+  private getEmialsFormat(){
+    return this.eventForm.controls['emails'].value.map( (email:any) => `${email}@ufps.edu.co`)
   }
 
   /**
@@ -281,24 +325,28 @@ export class EventComponent implements OnInit{
    * Método para establecer la cantidad minima de personas para prestar el espacio o servicio.
    * @returns la cantidad de personas minimas para prestar el espacio o servicio
    */
-  public setMinPeopleValitador(){
-    const minValidators: {[key:string]: number} = {
-      'A': 30,
-      'S': 5,
-      'ST': 20,
-      'BD': 8
+  public setPeopleValitadors(){
+    const minValidators: {[key:string]: number[]} = {
+      'A': [30, 200],
+      'S': [5,25],
+      'BD': [8, 36]
     }
     return minValidators[this.ticket.reservationTicket.service.physicalSpace];
   }
 
   public getErrorPeopleMessage(){
-    const minPeople = this.setMinPeopleValitador();
+    const people = this.setPeopleValitadors();
 
-    if(this.ticket.reservationTicket.service.type == 'prestamo'){
-      return `Para reservar el espacio solicitado se requieren como minimo ${minPeople} personas;`
+    if(this.controlPeople?.errors!['min']){
+      return `minimo ${people[0]} personas.` 
+    }
+    
+    if(this.controlPeople?.errors!['max']){
+      return `Máximo ${people[1]} personas.`
     }
 
-    return `Para realizar la capacitación solicitada se requieren como minimo ${minPeople} personas`;
+
+    return
   }
 
   /**
@@ -319,12 +367,12 @@ export class EventComponent implements OnInit{
    * Método para iniciar el contador de cierre de sesión cuando el usuario descargue el documento. 
    */
   public startTimer(){
-    const interval = setInterval(() => {
+    this.interval = setInterval(() => {
       if(this._countdown > 0) {
         this._countdown--;
       } else {
         this.auth.logout();
-        clearInterval(interval);
+        clearInterval(this.interval);
       }
     }, 1000);
 
@@ -352,6 +400,9 @@ export class EventComponent implements OnInit{
       link.download = this.finalRes.nameFile;
       link.click();
 
+      this.controlDownload = false;
+      this.startTimer(); //inicio el contador regresivo
+
       //un timeout para eliminar el objeto pasado 1segundo. 
       setTimeout(() => {
         URL.revokeObjectURL(downloadUrl); // libera la memoria utilizada por el objeto URL
@@ -368,4 +419,10 @@ export class EventComponent implements OnInit{
     this.seedbeds = seedbeds;
     this.Ticket.personalInformation.faculty = department
   }
+
+  public reset(){
+    this.stepService.changeStepValue(2);
+    clearInterval(this.interval);
+  }
+
 }

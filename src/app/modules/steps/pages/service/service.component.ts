@@ -1,6 +1,5 @@
-import { Component, EventEmitter, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { StepService } from 'src/app/shared/services/step.service';
 import { ReservationTicketService } from '../../services/reservation-ticket.service';
 
@@ -11,8 +10,13 @@ import { ReservationTicketService } from '../../services/reservation-ticket.serv
 })
 export class ServiceComponent implements OnInit{
 
-  serviceForm!: FormGroup;
+  serviceForm: FormGroup  = this.fb.group({
+    service: ['', [Validators.required] ],
+    loan: ['', [Validators.required] ]
+  });
+
   service: string = '';
+
   private _service = {
       type: '',
       physicalSpace: ''
@@ -23,30 +27,12 @@ export class ServiceComponent implements OnInit{
     private fb: FormBuilder,
     private ticket: ReservationTicketService
   )
-  {
-      this.serviceForm = this.fb.group({
-        service: ['', [Validators.required] ],
-        loan: ['', [Validators.required] ]
-      });
-
-      this.serviceForm.valueChanges.subscribe(value => {
-        this.service = value.service
-      })
-
-    
-   }
+  {   }
 
   ngOnInit(): void {
-    
-    //consulto si el servicio ya fue seleccionado
-    if(this.ticket.reservationTicket.service.type.length > 0)
-      this.serviceForm.controls['service'].setValue(this.ticket.reservationTicket.service.type, {emitEvent: false})
-    
-      //consulto si el espacio ya fue seleccionado
-    if(this.ticket.reservationTicket.service.physicalSpace.length > 0)
-      this.serviceForm.controls['loan'].setValue(this.ticket.reservationTicket.service.physicalSpace, {emitEvent: false})
-
-    // Limpio el servicio seleccionado en caso de que en el step 3 se devuelva al 3
+    this.serviceForm.valueChanges.subscribe(value => {
+      this.service = value.service
+    })
     this.changeService()
   }
 
@@ -55,7 +41,6 @@ export class ServiceComponent implements OnInit{
   }
 
   public submit(){
-
     //obtengo la informacion del formulario y la guardo en el ticket
     this._service = {
       type: this.serviceForm.controls['service'].value,
@@ -103,10 +88,10 @@ export class ServiceComponent implements OnInit{
     const loanFormats: {[key: string]: string} = {
       'auditorio': 'A',
       'semilleros': 'S',
-      'trival': 'ST'
+      'trival': 'ST',
     }
 
-    return loanFormats[this.serviceForm.controls['loan']?.value]  || "BD"
+    return loanFormats[this.serviceForm.controls['loan'].value] || 'BD'
   }
 
 }
