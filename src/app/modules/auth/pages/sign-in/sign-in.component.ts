@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import { StepService } from 'src/app/shared/services/step.service';
 @Component({
   selector: 'app-sign-in',
   templateUrl: './sign-in.component.html',
@@ -35,14 +36,11 @@ export class SignInComponent implements OnInit{
   constructor( 
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private stepper: StepService
   ) {  }
 
-
   ngOnInit(): void {
-   
-    //Se limpia el localStorage.
-    localStorage.clear();
 
   }
 

@@ -12,7 +12,9 @@ export class StepService {
 
   constructor(
     private router: Router
-  ) { }
+  ) {
+    this.goToCurrentStep(parseInt(localStorage.getItem('step')!) || 1);
+   }
 
   get currentStep() {
     return this._currentStep;

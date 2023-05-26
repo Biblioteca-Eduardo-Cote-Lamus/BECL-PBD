@@ -49,7 +49,7 @@ export class EventComponent implements OnInit, OnDestroy{
   public seedbeds = this.departments[0].seedbeds;
 
   // Varible para controlar los botones de cierre de sesion de la pantalla final
-  public controlDownload = true; //por defecto en true para que se deshabiliten los botones
+  public controlDownload = false; //por defecto en true para que se deshabiliten los botones
 
 
   //Formulario reactivo para el control de la informacion del evento
@@ -290,8 +290,10 @@ export class EventComponent implements OnInit, OnDestroy{
           this.finalRes = res; 
           this.showLoading = false;
 
-          if(data.support.type == 'BD')
+          if(data.support.type == 'BD'){
+            this.controlDownload = true;
             this.startTimer();
+          }
       }
      })
   }
@@ -400,7 +402,7 @@ export class EventComponent implements OnInit, OnDestroy{
       link.download = this.finalRes.nameFile;
       link.click();
 
-      this.controlDownload = false;
+      this.controlDownload = true;
       this.startTimer(); //inicio el contador regresivo
 
       //un timeout para eliminar el objeto pasado 1segundo. 

@@ -1,4 +1,4 @@
-import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { IStep } from 'src/app/data/interfaces/step-item.interface';
 import { StepService } from '../../../../shared/services/step.service';
 import { Router } from '@angular/router';
@@ -34,7 +34,7 @@ export class StepContainerComponent implements OnInit{
   private confirmExit = false;
 
   currentStep = 1;
-  // routes = [['/eventos/personal-info'], ['/eventos/service'],['/eventos/event']]
+
   constructor(
     private stepService: StepService,
     private router: Router,
@@ -55,16 +55,7 @@ export class StepContainerComponent implements OnInit{
     // Validamos 
     if(! this.authS.validateToken())
       this.router.navigate(['/auth'])
+
   }
-
-
-  // saveCurrentStep(){
-  //   // Guardo el estado actual del step
-  //   localStorage.setItem('step', JSON.stringify({step: this.currentStep}));
-  // }
-
-  // goToCurrentStep(){    
-  //   this.router.navigate(this.routes[this.currentStep-1]);
-  // }
 
 }

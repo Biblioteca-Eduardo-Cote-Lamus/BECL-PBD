@@ -112,8 +112,8 @@
             <!-- Contenedor para un segundo encargado -->
             <div class="mt-4">
                 <div class="flex items-center gap-1 mb-4 pl-1">
-                    <input type="checkbox" name="second" id="second" class="w-4 h-4" formControlName="extra">
-                    <label for="second">Deseo agregar un segundo encargado</label>
+                    <input type="checkbox" name="second" id="second" class="w-4 h-4" formControlName="extra" >
+                    <label for="second" pTooltip="Persona/s encargas de recibir el espacio solicitado en caso de que el solicitante no pueda recepcionarlo.">Deseo agregar un segundo encargado</label>
                 </div>
                 <div class="card p-fluid" *ngIf="this.eventForm.controls['extra'].value">
                         <p-chips formControlName="emails" [max]="2" pTooltip="Máximo 2 encargados" separator="@">

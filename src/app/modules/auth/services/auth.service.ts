@@ -15,7 +15,7 @@ export class AuthService {
   //Observables para manejar el usuario actual
   private currentUserBehavior!:BehaviorSubject<Usuario>;
   private currentUserObservable!: Observable<Usuario>;
-  private _isLogin: boolean = false;
+  
 
   private jwtHelper: JwtHelperService
 
@@ -31,6 +31,7 @@ export class AuthService {
   ) { 
     this.jwtHelper = new JwtHelperService();
     this.currentUserBehavior = new BehaviorSubject<Usuario>({} as Usuario);
+    this.currentUserObservable = this.currentUserBehavior.asObservable();
   }
 
   get getcurrentUserObservable () {
@@ -38,7 +39,7 @@ export class AuthService {
   }
 
     //método para manejar el inicio de sesión. 
-  login(username: string, password: string){
+  public login(username: string, password: string){
     return this.http.post(this.baseUrl+"login/", { username, password }).pipe(
       tap( (res:any) => {
         
@@ -53,8 +54,6 @@ export class AuthService {
         //si no son las credenciales o hay un error, se mantiene el usuario vacio
         //Caso contrario se crea el objeto
         this.currentUserBehavior.next(this.jwtHelper.decodeToken(this.token)!);
-        this.currentUserObservable = this.currentUserBehavior.asObservable();
-        this._isLogin = true;
         //guardo en el localstorage 
         this.saveOnLocalStorage(this.jwtHelper.decodeToken(this.token)!);
       }),
@@ -62,7 +61,8 @@ export class AuthService {
   }
 
   //Método para menejar el cierre de sesión.
-  logout(){
+  public logout(){
+    localStorage.clear();
     this.router.navigate(['/auth'])
   }
 
