@@ -29,29 +29,14 @@ export class ForgotPComponent implements OnInit{
 
   private _forgotToken = ''; 
 
-  private otpCode = ''
+  public otpCode = ''
 
+  public invalidCodeTrigger = false;
 
+  public shutDownCounter!:number;
 
-// =============================================================================
+  private interval!:any;
 
-// Variables y elementos para trabjar con los inputs de la verificacion del código. 
-
-  @ViewChild('digit1Input') digit1Input!: ElementRef;
-  @ViewChild('digit2Input') digit2Input!: ElementRef;
-  @ViewChild('digit3Input') digit3Input!: ElementRef;
-  @ViewChild('digit4Input') digit4Input!: ElementRef;
-  @ViewChild('digit5Input') digit5Input!: ElementRef;
-  @ViewChild('digit6Input') digit6Input!: ElementRef;
-
-  public otpForm: FormGroup =  this.fb.group({
-      digit1: ['', [ Validators.required, Validators.pattern(/[0-9]/) ]],
-      digit2: ['', [ Validators.required, Validators.pattern(/[0-9]/) ]],
-      digit3: ['', [ Validators.required, Validators.pattern(/[0-9]/) ]],
-      digit4: ['', [ Validators.required, Validators.pattern(/[0-9]/) ]],
-      digit5: ['', [ Validators.required, Validators.pattern(/[0-9]/) ]],
-      digit6: ['', [ Validators.required, Validators.pattern(/[0-9]/) ]],
-    })
 
 // =============================================================================
 
@@ -69,17 +54,12 @@ export class ForgotPComponent implements OnInit{
   constructor (
     private fPassword: ForgotPaswordService,
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
   ) {}
 
 
   ngOnInit(): void {
-    this.otpForm.valueChanges.subscribe( (value) => {
-      if (this.otpForm.valid) 
-        this.otpCode = Object.values(value).join('');
-
-      this.changeFocus(value)
-    })
+    clearInterval(this.interval)
   }
 
 // ===================================================================================================================================
@@ -96,7 +76,7 @@ export class ForgotPComponent implements OnInit{
    * Método para solicitar el cambio de contraseña al backend a través del correo.
    * @returns Detiene la ejecución del resto de acciones en caso que ocurra un error en el backend
    */
-  public submit(){
+  public submit(){ 
     // Condicion para validar si no se ha escrito nada en el input.
     if(this.email.length == 0 &&  this.validEmail){
       this.validEmail = false; //para mostrar los errores
@@ -104,29 +84,55 @@ export class ForgotPComponent implements OnInit{
     }
 
     this.triggerLoad = true; 
+    this.shutDownCounter = 59;
 
     this.fPassword.validateEmail({email: this.email}).subscribe({
-      next: ({ok, token}:any) => {
-        
+      next: ({ok, token, message}:any) => {
+        this.triggerLoad = false;
+
         if (!ok){
           Swal.fire({
-            title: '¡Error!',
-            text: `Ha ocurrido un error. Intenta enviar de nuevo el correo. `,
+            title: `${message}`,
+            text: `El correo que has proporcionado no se encuentra registrado.`,
             icon: 'error',
             confirmButtonText: 'Aceptar'
-          })
+          })  
           return
-        }        
-        this.triggerLoad = false;
+        }       
+
+        //activo el intervalo para reenviar hablitar el reenvio del código.
+        this.interval = setInterval( () => {
+          if(this.shutDownCounter > 0) {
+            this.shutDownCounter--;
+          } else {
+            clearInterval(this.interval);
+          }
+        }, 1000);
+
         this._forgotToken = token; 
         this.showCode = true;
+      },
+      error: err => {
+        //si ocurre alguno error, no se debe de cargar la pantalla de carga.
+        this.triggerLoad = false;
       }
     })
 
   }
 
+  /**
+   * Método para retornar el susbtitulo en la fase de recuperarción de contraseña.
+   * @returns El subtitulo que indica si se tiene que ingresar el correo electronico o si ya se envio el código de verificación
+   */
   public getSubtitle(){
     return this.triggerLoad ? `Hemos enviado un código de verificación al correo ${this.email}`: 'Por favor, ingresa el correo institucional. Le enviaremos un código de verificación.'
+  }
+
+  /**
+   * Método para cancelar la recuperación de contraseña
+   */
+  public cancel(){
+    this.router.navigate(['/auth']);
   }
 
 // ===================================================================================================================================
@@ -148,36 +154,39 @@ export class ForgotPComponent implements OnInit{
     this.triggerLoad = true;
 
     this.fPassword.validateCode(data).subscribe({
-      next: res => {
-        console.log(res)
+      next: (res:any) => {
+
+        this.triggerLoad = false;
+
+        if(! res.ok) {
+          this.invalidCodeTrigger = true;
+          return 
+        }
+
+        this.showCode = false
+        this.showChangePassword = true;
+      },
+      error: err => {
         this.showCode = false
         this.triggerLoad = false;
-        this.showChangePassword = true;
+        this.invalidCodeTrigger = true;
       }
     })
   }
 
   /**
-   * Método para controlar el cambio de foco entre los inputs para la verificación del codigo
-   * @param value el valor que retonar el formulario reactivo en su metodo valueChanges.
+   * Método para limitar a un input type text de que sea solo numeros permitidos 
+   * @param event evento de pressdown
    */
-  private changeFocus(value: any){
-    if (value.digit1.length === 1) {
-      this.digit2Input.nativeElement.focus();
-    }
-    if (value.digit2.length === 1) {
-      this.digit3Input.nativeElement.focus();
-    }
-    if (value.digit3.length === 1) {
-      this.digit4Input.nativeElement.focus();
-    }
-    if (value.digit4.length === 1) {
-      this.digit5Input.nativeElement.focus();
-    }
-    if (value.digit5.length === 1) {
-      this.digit6Input.nativeElement.focus();
+  public soloNumeros(event:any){
+    const tecla = event.key;
+    const esNumero = /^\d$/.test(tecla);
+    const esTeclaPermitida = (tecla === 'Backspace' || tecla === 'Enter');
+    if (!esNumero && !esTeclaPermitida) {
+      event.preventDefault();
     }
   }
+
 
 //======================================================================================================================================================================================================================================================================
 

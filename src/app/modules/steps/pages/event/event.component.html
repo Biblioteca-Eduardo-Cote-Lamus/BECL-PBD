@@ -116,8 +116,9 @@
                     <label for="second" pTooltip="Persona/s encargas de recibir el espacio solicitado en caso de que el solicitante no pueda recepcionarlo.">Deseo agregar un segundo encargado</label>
                 </div>
                 <div class="card p-fluid" *ngIf="this.eventForm.controls['extra'].value">
-                        <p-chips formControlName="emails" [max]="2" pTooltip="Máximo 2 encargados" separator="@">
-                            <ng-template let-item pTemplate="item"> {{ item }}@ufps.edu.co <i class="pi pi-user ml-2"></i> </ng-template>
+                        <span>Ingrese el correo electronico</span>
+                        <p-chips formControlName="emails" [max]="2" pTooltip="Máximo 2 encargados" >
+                            <ng-template let-item pTemplate="item"> <i class="pi pi-user ml-2"></i> {{ item }} </ng-template>
                         </p-chips>
                 </div>
             </div>
@@ -178,7 +179,7 @@
                     <!-- contenedor para cerrar sesion o realizar otra agendamiento -->
                     <div class="flex justify-center gap-6 " *ngIf="controlDownload">
                         <button (click)="reset()" class="inline-block px-8 py-1 bg-yellow-500 hover:bg-yellow-600 text-white rounded-md text-center transition-colors">Agendar Evento</button>
-                        <a [routerLink]="['/auth/']" class="inline-block px-8 py-1 bg-red-500 hover:bg-red-600 text-white rounded-md text-center transition-colors">Cerrar sesion <span class="text-[10px]">({{countDown}})</span></a>
+                        <button (click)="auth.logout()" class="inline-block px-8 py-1 bg-red-500 hover:bg-red-600 text-white rounded-md text-center transition-colors">Cerrar sesion <span class="text-[10px]">({{countDown}})</span></button>
                     </div>
                 </div>
               </div>

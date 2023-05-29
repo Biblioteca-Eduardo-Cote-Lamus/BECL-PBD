@@ -68,7 +68,7 @@ export class EventComponent implements OnInit, OnDestroy{
     private eventService: EventsService,
     private ticket: ReservationTicketService,
     private fb: FormBuilder,
-    private auth: AuthService
+    public auth: AuthService
   ){}
 
 
@@ -298,8 +298,12 @@ export class EventComponent implements OnInit, OnDestroy{
      })
   }
 
+  /**
+   * Método qeu devuelve la lista de correos del encargado.
+   * @returns la lista de correos para los encargados
+   */
   private getEmialsFormat(){
-    return this.eventForm.controls['emails'].value.map( (email:any) => `${email}@ufps.edu.co`)
+    return this.eventForm.controls['emails'].value
   }
 
   /**
@@ -336,6 +340,10 @@ export class EventComponent implements OnInit, OnDestroy{
     return minValidators[this.ticket.reservationTicket.service.physicalSpace];
   }
 
+  /**
+   * Método para determinar el error a mostrar en caso de que las personas a asistir sean menos o mayor a los limites
+   * @returns Mensaje de error para el input de personas
+   */
   public getErrorPeopleMessage(){
     const people = this.setPeopleValitadors();
 
@@ -414,14 +422,20 @@ export class EventComponent implements OnInit, OnDestroy{
     });
   }
 
+  /**
+   * Método para establecer el semillero seleccionado. 
+   * @param event Evento donde se extrae el valor para el semillero seleccionado
+   */
   public selectSeedbeds(event: any){
     const { department,  seedbeds } = event.value
-    console.log(department);
-    
+  
     this.seedbeds = seedbeds;
     this.Ticket.personalInformation.faculty = department
   }
 
+  /**
+   * Método para re agendar otro evento. 
+   */
   public reset(){
     this.stepService.changeStepValue(2);
     clearInterval(this.interval);

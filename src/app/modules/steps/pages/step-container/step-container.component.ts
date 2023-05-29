@@ -4,6 +4,7 @@ import { StepService } from '../../../../shared/services/step.service';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/modules/auth/services/auth.service';
 
+import Swal from 'sweetalert2'
 
 @Component({
   selector: 'app-step-container',
@@ -56,6 +57,26 @@ export class StepContainerComponent implements OnInit{
     if(! this.authS.validateToken())
       this.router.navigate(['/auth'])
 
+  }
+
+  /**
+   * Método para finalizar la sesión en cualquiera paso. 
+   */
+  public finalizar(){
+    // Lanzamos una alerta de que nada se guardara 
+    Swal.fire({
+      title: '¡No se guardará nada!',
+      text: `Parece ser que no haz completado todos los pasos. ¿Estás seguro de que deseas finalizar la sesión?`,
+      icon: 'warning',
+      confirmButtonText: 'Aceptar'
+    }).then(res => {
+      
+      if(res.dismiss || res.isDenied)
+        return;
+
+      //Se finaliza la sesión. 
+      this.authS.logout();
+    })
   }
 
 }
