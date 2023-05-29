@@ -8,6 +8,7 @@ import { holidays } from 'src/app/data/const/holidays.const';
 import Swal from 'sweetalert2'
 import { AuthService } from 'src/app/modules/auth/services/auth.service';
 import { semilleros } from 'src/app/data/const/semilleros.const';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-event',
@@ -285,8 +286,8 @@ export class EventComponent implements OnInit, OnDestroy{
     this.showLoading = true;
 
     // me suscribo a la respuesta del backend.
-    this.eventService.saveEvent({token, data}).subscribe(
-      { next: res => {
+    this.eventService.saveEvent({token, data}).subscribe({ 
+        next: res => {
           this.finalRes = res; 
           this.showLoading = false;
 
@@ -294,7 +295,16 @@ export class EventComponent implements OnInit, OnDestroy{
             this.controlDownload = true;
             this.startTimer();
           }
-      }
+        },
+        error: err => {
+          this.showLoading = false;
+          Swal.fire({
+            title: '¡Error!',
+            text: `Lo sentimos, ha ocurrido un error. Intenta agendar de nuevo el evento. Si el error sigue persistiendo, por favor, notificarlo a biblioteca@ufps.edu.co`,
+            icon: 'error',
+            confirmButtonText: 'Aceptar'
+          })
+        }
      })
   }
 
@@ -400,25 +410,9 @@ export class EventComponent implements OnInit, OnDestroy{
     }
 
     this.eventService.downloadDocument( data ).subscribe((response: any) => {
-      // creamos el objto blob, se le pasa la response del backend y se le configura el type 'application/pdf' para que se descargue en pdf.
-      const blob = new Blob([response], { type: 'application/pdf' });
-
-      //se crea una url para el blol
-      const downloadUrl = URL.createObjectURL(blob);
-      const link = document.createElement('a'); //se crea el elemento virtual y se le asigna el evento click para que se descargue el doc
-      link.href = downloadUrl;
-      link.download = this.finalRes.nameFile;
-      link.click();
-
       this.controlDownload = true;
       this.startTimer(); //inicio el contador regresivo
-
-      //un timeout para eliminar el objeto pasado 1segundo. 
-      setTimeout(() => {
-        URL.revokeObjectURL(downloadUrl); // libera la memoria utilizada por el objeto URL
-        link.remove(); // elimina el enlace del DOM
-      }, 1000);
-
+      saveAs(response,this.finalRes.nameFile);
     });
   }
 
