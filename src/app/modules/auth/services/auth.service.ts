@@ -39,7 +39,7 @@ export class AuthService {
 
     //método para manejar el inicio de sesión. 
   public login(username: string, password: string){
-    return this.http.post(`${enviroment.productionUrl}/login/`, { username, password }).pipe(
+    return this.http.post(`${enviroment.productionUrl}login/`, { username, password }).pipe(
       tap( (res:any) => {
         
         if(! res.ok){
