@@ -10,9 +10,6 @@ import { enviroment } from 'src/app/environments/environment.development';
 })
 export class EventsService {
 
-  private _eventsUrl = enviroment.baseUrlLocal;
-  private _saveUrl = enviroment.baseUrlAuth
-
   constructor(
     private http: HttpClient
   ) { }
@@ -22,7 +19,7 @@ export class EventsService {
    * @param {token, date, type} un objeto que contiene el token, la fecha de consulta y el tipo de evento que se solicita.
    */
   public getEvents( {token, dates, type } : {token:string, dates:string[], type:string} ):Observable<EventsHour[]> {
-    return this.http.post<Events>(`${this._eventsUrl}events_PDB/`, {token,dates, type}).pipe(
+    return this.http.post<Events>(`${enviroment.productionUrl}events_PDB/`, {token,dates, type}).pipe(
       map( eventos => {
         //obtengo la hora actual
         const today = new Date();
@@ -38,11 +35,11 @@ export class EventsService {
   }
 
   public saveEvent( {token, data}: {token: string, data: any} ): Observable<any>{
-    return this.http.post<any>(`${this._eventsUrl}schedule_PDB/`,  {token, data})
+    return this.http.post<any>(`${enviroment.productionUrl}schedule_PDB/`,  {token, data})
   }
   
   public downloadDocument({name, type}: {name: string, type: string}){
-    return this.http.post(`${this._eventsUrl}download/`, {name, type}, { responseType: 'blob' } )
+    return this.http.post(`${enviroment.productionUrl}download/`, {name, type}, { responseType: 'blob' } )
   }
 
 

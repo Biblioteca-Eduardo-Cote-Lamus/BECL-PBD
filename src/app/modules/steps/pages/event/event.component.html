@@ -140,7 +140,8 @@
         <div *ngIf="showLoading; else show" class="flex flex-col items-center justify-center w-full h-[374px]" >
             <span class="loader"></span>
             <div class="mt-12 text-center p-2">
-                <span class="font-medium">¡Espera un momento. Estamos agendando el evento!</span>
+                <span class="font-medium block">¡Espera un momento. Estamos agendando el evento!</span>
+                <span class="font-medium block">Por favor, no refresque la página.</span>
             </div>
         </div>
         <ng-template #show>

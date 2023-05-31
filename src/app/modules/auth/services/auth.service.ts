@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { BehaviorSubject, Observable, map, tap } from 'rxjs';
-import { Token } from 'src/app/data/interfaces/token.interface';
 import { Usuario } from 'src/app/data/interfaces/usuario.interface';
 import { enviroment } from 'src/app/environments/environment.development';
 import { Router } from '@angular/router';
@@ -23,7 +22,7 @@ export class AuthService {
   private token: string = '';
 
   //variable para peticiones al backend de autenticacion
-  private baseUrl = enviroment.baseUrlLocal;
+  // private baseUrl = enviroment.baseUrlLocal;
 
   constructor(
     private http: HttpClient,
@@ -40,7 +39,7 @@ export class AuthService {
 
     //método para manejar el inicio de sesión. 
   public login(username: string, password: string){
-    return this.http.post(this.baseUrl+"login/", { username, password }).pipe(
+    return this.http.post(`${enviroment.productionUrl}/login/`, { username, password }).pipe(
       tap( (res:any) => {
         
         if(! res.ok){

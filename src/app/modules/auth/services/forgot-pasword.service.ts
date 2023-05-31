@@ -15,15 +15,15 @@ export class ForgotPaswordService {
 
 
   public validateEmail({email}: {email:string}){
-    return this.http.post(`${this._baseUrl}forgot_password/`, {email})
+    return this.http.post(`${enviroment.productionUrl}forgot_password/`, {email})
   }
 
   public validateCode({token, codeVery}: {token: string, codeVery: string}) {
-    return this.http.post(`${this._baseUrl}valid_code/`, {token, codeVery})
+    return this.http.post(`${enviroment.productionUrl}valid_code/`, {token, codeVery})
   }
 
   public updatePassword({token, email, password}:{token: string, email:string ,password: string}){
-    return this.http.post(`${this._baseUrl}reset_password/`, {token,email, password})
+    return this.http.post(`${enviroment.productionUrl}reset_password/`, {token,email, password})
   }
 
 

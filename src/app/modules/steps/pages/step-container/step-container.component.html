@@ -27,7 +27,7 @@
         </div>
         <!-- contenedor para el renderizado de los componentes -->
         <div class="mt-8 bg-white w-[90%] mx-auto rounded-md lg:mt-0 ">
-            <div class=" px-4 pt-4">
+            <div class=" px-4 pt-4" *ngIf="currentStep != 4">
                 <button (click)="finalizar()" class="block ml-auto bg-red-600 text-white py-1 px-6 rounded-md hover:bg-red-500 transition-colors">
                     Salir 
                     <i class="pi pi-sign-out"></i>

@@ -298,6 +298,8 @@ export class EventComponent implements OnInit, OnDestroy{
         },
         error: err => {
           this.showLoading = false;
+          this.stepService.changeStepValue(3);
+          this.changeSheduleEvent = false;
           Swal.fire({
             title: '¡Error!',
             text: `Lo sentimos, ha ocurrido un error. Intenta agendar de nuevo el evento. Si el error sigue persistiendo, por favor, notificarlo a biblioteca@ufps.edu.co`,
