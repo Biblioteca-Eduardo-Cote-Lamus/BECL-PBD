@@ -291,10 +291,8 @@ export class EventComponent implements OnInit, OnDestroy{
           this.finalRes = res; 
           this.showLoading = false;
 
-          if(data.support.type == 'BD'){
-            this.controlDownload = true;
-            this.startTimer();
-          }
+          this.controlDownload = true;
+          this.startTimer();
         },
         error: err => {
           this.showLoading = false;
@@ -412,7 +410,7 @@ export class EventComponent implements OnInit, OnDestroy{
     }
 
     this.eventService.downloadDocument( data ).subscribe((response: any) => {
-      this.controlDownload = true;
+      // this.controlDownload = true;
       this.startTimer(); //inicio el contador regresivo
       saveAs(response,this.finalRes.nameFile);
     });

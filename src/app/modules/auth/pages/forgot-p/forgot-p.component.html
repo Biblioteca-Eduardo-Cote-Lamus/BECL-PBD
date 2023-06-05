@@ -19,7 +19,7 @@
                     <div class="my-2 relative lg:mb-3">
                         <div class="flex items-center border-black border-b rounded-b-md px-4" [ngClass]="{'my-4 border-b-red-500': !validEmail}">
                             <span class="pr-4"><i class="pi pi-user"></i></span>
-                            <input type="email" placeholder="example@ufps.edu.co" class="block w-[95%]  outline-none mx-auto py-2" (input)="validateEmail()" [(ngModel)]="email" (keyup.enter)="submit()">
+                            <input type="email" autofocus placeholder="example@ufps.edu.co" class="block w-[95%]  outline-none mx-auto py-2" (input)="validateEmail()" [(ngModel)]="email" (keyup.enter)="submit()">
                             <span class="text-red-400" [ngClass]="{'hidden': validEmail}"><i class="pi pi-info-circle"></i></span>
                         </div>
                         <span class="text-left text-red-500 block  px-4 opacity-0" [ngClass]="{'opacity-100': !validEmail}">Formato de correo invalido.</span>
@@ -53,7 +53,7 @@
                         <form [formGroup]="passwordsForm" (ngSubmit)="changePassword()">
                             <div class="p-fluid mb-5">
                                 <div class="p-float-label">
-                                    <p-password [ngClass]="{'ng-invalid ng-dirty': passwordsForm.controls['newPassword'].invalid}"
+                                    <p-password [autofocus]="true" [ngClass]="{'ng-invalid ng-dirty': passwordsForm.controls['newPassword'].invalid}"
                                                 [feedback]="true" [toggleMask]="true"  inputStyleClass="rounded-md" id="newpassword" formControlName="newPassword" promptLabel="Una contraseña segura hace la diferencia" weakLabel="Débil " mediumLabel="Medio" strongLabel="Fuerte">
                                         <ng-template pTemplate="header">
                                             <h6 class="text-left py-3">Digita la contraseña nueva</h6>

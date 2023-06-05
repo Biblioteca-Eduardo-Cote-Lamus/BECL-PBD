@@ -21,7 +21,7 @@
                                formControlName="administrativeCode"
                                [ngClass]="{ 'border-2 border-red-500 invalid' : validateField('administrativeCode') || triggerErrors}"> -->
                         <div class="p-fluid">
-                            <input type="text" formControlName="administrativeCode"  placeholder="0001" maxlength="6" pInputText [ngClass]="{ 'border-2 border-red-500 invalid' : validateField('administrativeCode') || triggerErrors}">
+                            <input type="text" autofocus formControlName="administrativeCode"  placeholder="0001" maxlength="6" pInputText [ngClass]="{ 'border-2 border-red-500 invalid' : validateField('administrativeCode') || triggerErrors}">
                         </div>
                         <small *ngIf="validateField('administrativeCode') || triggerErrors" class="m-2 p-error">Codigo invalido o no registrado</small>
                     </div>
