@@ -9,8 +9,6 @@ import { EventComponent } from './pages/event/event.component';
 import { PrimeModule } from '../primeng/prime.module';
 import { HttpClientModule } from '@angular/common/http';
 
-
-
 @NgModule({
   declarations: [
     StepContainerComponent,
