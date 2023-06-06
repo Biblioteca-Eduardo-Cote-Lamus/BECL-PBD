@@ -6,6 +6,7 @@ import { HomeComponent } from './pages/home/home.component';
 import { RouterModule } from '@angular/router';
 import { AdminRouterModule } from './admin-router.module';
 import { ListadoComponent } from './pages/listado/listado.component';
+import { PrimeModule } from '../primeng/prime.module';
 
 
 
@@ -19,7 +20,8 @@ import { ListadoComponent } from './pages/listado/listado.component';
   imports: [
     CommonModule,
     RouterModule,
-    AdminRouterModule
+    AdminRouterModule,
+    PrimeModule
   ]
 })
 export class AdminModule { }

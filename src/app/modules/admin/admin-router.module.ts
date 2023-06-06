@@ -5,18 +5,12 @@ import { ListadoComponent } from './pages/listado/listado.component';
 
 const routes:Routes = [
   {
-    path:'dashboard',
-    component: HomeComponent,
-    children: [
-      {
-        path:'eventos',
-        component: ListadoComponent
-      }
-    ]
+    path:'eventos-list',
+    component: ListadoComponent
   },
   {
     path: '**',
-    redirectTo: 'dashboard/eventos'
+    redirectTo: 'eventos-list'
   }
 ]
 

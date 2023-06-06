@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule} from '@angular/router';
 import { AuthGuard } from './shared/guards/auth.guard';
+import { HomeComponent } from './modules/admin/pages/home/home.component';
 
 const routes: Routes = [
   {
@@ -14,6 +15,7 @@ const routes: Routes = [
   },
   {
     path:'admin',
+    component: HomeComponent,
     loadChildren: () => import('./modules/admin/admin.module').then(ad => ad.AdminModule),
   },
   {

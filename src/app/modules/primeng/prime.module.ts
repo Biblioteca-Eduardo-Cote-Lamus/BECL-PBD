@@ -5,6 +5,8 @@ import { DropdownModule } from 'primeng/dropdown';
 import { PasswordModule } from 'primeng/password'
 import { ChipsModule } from 'primeng/chips';
 import { TooltipModule } from 'primeng/tooltip';
+import { TableModule } from 'primeng/table';
+import { TagModule } from 'primeng/tag';
 @NgModule({
   declarations: [],
   exports: [
@@ -13,7 +15,9 @@ import { TooltipModule } from 'primeng/tooltip';
     DropdownModule,
     PasswordModule,
     ChipsModule,
-    TooltipModule
+    TooltipModule,
+    TableModule,
+    TagModule
   ]
 })
 export class PrimeModule { }
