@@ -7,6 +7,9 @@ import { RouterModule } from '@angular/router';
 import { AdminRouterModule } from './admin-router.module';
 import { ListadoComponent } from './pages/listado/listado.component';
 import { PrimeModule } from '../primeng/prime.module';
+import { HttpClientModule } from '@angular/common/http';
+import { DatesPipe } from './pipes/dates.pipe';
+import { TipoPipe } from './pipes/tipo.pipe';
 
 
 
@@ -15,13 +18,16 @@ import { PrimeModule } from '../primeng/prime.module';
     SidebarComponent,
     NavbarComponent,
     HomeComponent,
-    ListadoComponent
+    ListadoComponent,
+    DatesPipe,
+    TipoPipe
   ],
   imports: [
     CommonModule,
     RouterModule,
     AdminRouterModule,
-    PrimeModule
+    PrimeModule,
+    HttpClientModule
   ]
 })
 export class AdminModule { }

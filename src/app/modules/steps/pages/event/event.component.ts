@@ -262,22 +262,16 @@ export class EventComponent implements OnInit, OnDestroy{
     
     // Añado todo a la data
     const data = {
-
-      calendar: {
-        title,
-        dates: [`${this.Ticket.event.date}T${hours[0]}:00:00-05:00`,`${this.Ticket.event.date}T${hours[1]}:00:00-05:00`],
-        emails
-      },
-
       support: {
-        type: this.Ticket.service.physicalSpace,
-        date: `${this.Ticket.event.date}`,
-        title: title.substring(3),
-        dependence: this.Ticket.personalInformation.faculty.toLowerCase(),
-        people: this.Ticket.event.people,
-        name: this.Ticket.personalInformation.name.toLowerCase(),
         code: this.Ticket.personalInformation.code,
-        hours: [this.Ticket.event.start, this.Ticket.event.end]
+        date: `${this.Ticket.event.date}`,
+        dependence: this.Ticket.personalInformation.faculty.toLowerCase(),
+        hours: [this.Ticket.event.start, this.Ticket.event.end],
+        title: title.substring(3),
+        people: this.Ticket.event.people,
+        type: this.Ticket.service.physicalSpace,
+        managers: emails,
+        observations: ''
       }
     }
 

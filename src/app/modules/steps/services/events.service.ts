@@ -23,7 +23,7 @@ export class EventsService {
       map( eventos => {
         //obtengo la hora actual
         const today = new Date();
-        const currentDate = today.toISOString().split('T')[0];
+        const currentDate = today.toISOString().split('T')[0];                                                                                                                                                                                                                                  
         const date = dates[0].split('T')[0];
         //Si la fecha seleccionada es la fecha actual, se filtran las horas mayores a la actual. Ejemplo, si se hace la peticion a las 6am, luego se retorna todas las horas mayores a esta.
         //en caso contrario. se devuelven todas las horas sin problema alguno.

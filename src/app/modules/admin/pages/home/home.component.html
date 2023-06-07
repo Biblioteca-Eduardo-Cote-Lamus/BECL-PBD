@@ -1,11 +1,11 @@
-<div class="w-full min-h-full overflow-y-auto">
+<div class="w-full min-h-screen overflow-y-auto bg-white">
     <div class="w-full">
         <app-navbar (close)="closeNav($event)"></app-navbar>
     </div>
     <div [ngClass]="{'-ml-60': open }"  class="absolute z-[10]  top-0 pt-[100px] md:pt-[70px] left-0  w-60 min-h-[100%] bg-slate-50  border-r-2  border-r-gray-200 transition-all">
         <app-sidebar [items]="items" ></app-sidebar>
     </div>
-    <div [ngClass]="{'ml-[245px] ': !open}"  class="transition-all m-4 mb-0 min-h-full"  >
+    <div [ngClass]="{'ml-[240px] ': !open}"  class="transition-all"  >
         <router-outlet></router-outlet>
     </div>
 </div>

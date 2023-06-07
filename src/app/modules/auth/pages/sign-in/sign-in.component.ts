@@ -25,7 +25,6 @@ export class SignInComponent implements OnInit{
       '',
       [
         Validators.required,
-        Validators.minLength(4)
       ] 
     ]
   })
