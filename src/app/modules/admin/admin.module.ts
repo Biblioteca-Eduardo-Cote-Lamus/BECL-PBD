@@ -10,6 +10,7 @@ import { PrimeModule } from '../primeng/prime.module';
 import { HttpClientModule } from '@angular/common/http';
 import { DatesPipe } from './pipes/dates.pipe';
 import { TipoPipe } from './pipes/tipo.pipe';
+import { StatesPipe } from './pipes/states.pipe';
 
 
 
@@ -20,7 +21,8 @@ import { TipoPipe } from './pipes/tipo.pipe';
     HomeComponent,
     ListadoComponent,
     DatesPipe,
-    TipoPipe
+    TipoPipe,
+    StatesPipe
   ],
   imports: [
     CommonModule,

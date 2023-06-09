@@ -49,9 +49,6 @@ export class EventComponent implements OnInit, OnDestroy{
   // Variable para almacenar los semilleros de los departamentos. 
   public seedbeds = this.departments[0].seedbeds;
 
-  // Varible para controlar los botones de cierre de sesion de la pantalla final
-  public controlDownload = false; //por defecto en true para que se deshabiliten los botones
-
 
   //Formulario reactivo para el control de la informacion del evento
   public eventForm: FormGroup = this.fb.group({
@@ -284,8 +281,6 @@ export class EventComponent implements OnInit, OnDestroy{
         next: res => {
           this.finalRes = res; 
           this.showLoading = false;
-
-          this.controlDownload = true;
           this.startTimer();
         },
         error: err => {

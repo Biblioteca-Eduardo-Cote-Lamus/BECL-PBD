@@ -59,7 +59,10 @@
                     Eventos por revisar
                 </h3>
             </div>
-            <div class="p-4">
+            <div class="grid place-content-center" *ngIf="triggerLoader">
+                <div class="mb-10 loader"></div>
+            </div>
+            <div class="" *ngIf="!triggerLoader">
                 <p-table 
                         #dt1
                         [value]="eventsList" 
@@ -95,29 +98,29 @@
                             <th *ngIf="filter === 1">Rechazar</th>
                         </tr>
                     </ng-template>
-                    <ng-template pTemplate="body" let-product>
+                    <ng-template pTemplate="body" let-event>
                         <tr>
-                            <td>{{ product.fecha_registro | dates:'registro' }}</td>
-                            <td>{{ product.usuario | titlecase }}</td>
-                            <td>{{ product.fecha_realizacion[0] | dates:'realizacion' }} {{product.fecha_realizacion[1]}} </td>
-                            <td>{{ product.tipo | tipo }}</td>
-                            <td>{{ product.personas }}</td>
+                            <td>{{ event.fecha_registro | dates:'registro' }}</td>
+                            <td>{{ event.usuario | titlecase }}</td>
+                            <td>{{ event.fecha_realizacion[0] | dates:'realizacion' }} {{event.fecha_realizacion[1]}} </td>
+                            <td>{{ event.tipo | tipo }}</td>
+                            <td>{{ event.personas }}</td>
                             <td> 
-                                <div class="flex items-center justify-center">
-                                    <span class="bg-orange-400 rounded-md  text-white inline-block py-1 px-2">
-                                        <i class="pi pi-info-circle"></i>
-                                        Por revisar
+                                <div class="flex items-center justify-center rounded-md  text-white gap-2  py-1 px-2" [ngClass]="getBackgroundIndicatorColor(event.estado)">
+                                    <i class="pi pi-info-circle"></i>
+                                    <span class="" >
+                                        {{event.estado | states}}
                                     </span>
                                 </div>
                             </td>
                             <ng-container *ngIf="filter === 1">
                                 <td>
-                                    <button class="bg-[#008000] p-2 rounded-md hover:bg-[#006400] inline-block text-white transition-colors">
-                                        <i class="pi pi-thumbs-up-fill"></i> 
+                                    <button (click)="showEventConfirmt(event.id,1)" class="bg-[#008000] p-2 rounded-md hover:bg-[#006400] inline-block text-white transition-colors">
+                                        <i class="pi pi-thumbs-up-fill"></i>                                         
                                     </button> 
                                 </td>
                                 <td> 
-                                    <button class="bg-[#8d0801] p-2 rounded-md hover:bg-[#bf0603] inline-block text-white transition-colors">
+                                    <button (click)="showEventConfirmt(event.id,0)" class="bg-[#8d0801] p-2 rounded-md hover:bg-[#bf0603] inline-block text-white transition-colors">
                                         <i class="pi pi-thumbs-down-fill"></i> 
                                     </button> 
                                 </td>
@@ -130,3 +133,39 @@
         </div>
     </div>
 </div>
+
+<div *ngIf="selectedEvent">
+    <p-dialog header="Información detallada del evento" [(visible)]="showEventConfirmtTrigger" [modal]="true" [style]="{ width: '60vw' }" [draggable]="false" [resizable]="false">
+        <!-- Informacion personal del solicitante  -->
+        <div class="mt-4">
+            <h2 class="font-bold mb-2">Información del solicitante</h2>
+            <p class="mb-2 pl-2">Nombre: <span class="font-bold">{{selectedEvent.usuario | titlecase }}</span>  </p>
+            <p  class="mb-2 pl-2">Fecha de la Solicitud: <span class="font-bold">{{ selectedEvent.fecha_registro | dates:'registro' }}</span>  </p>
+            <p  class="mb-2 pl-2">Dependencia: <span class="font-bold">{{ selectedEvent.dependencia }}</span>  </p>
+        </div>
+        <!-- Información del evento -->
+        <div>
+            <h2 class="font-bold mb-2">Información del Evento</h2>
+            <div class="pl-2">
+                <ul>
+                    <li> Titulo: <span class="font-bold">{{selectedEvent.titulo | titlecase }} </span>  </li>
+                    <li> Personas a asistir: <span class="font-bold">{{selectedEvent.personas }} </span>  </li>
+                    <li> Tipo de evento: <span class="font-bold">{{selectedEvent.tipo | tipo }} </span>  </li>
+                    <li> Estado Actual: <span class="font-bold">{{selectedEvent.estado | states }} </span>  </li>
+                    <li> Otros encargados: <span class="font-bold">{{selectedEvent.encargados }} </span>  </li>
+                    <li> Observaciones: <span class="font-bold">{{selectedEvent.observaciones }} </span>  </li>
+                </ul>
+            </div>
+        </div>
+        <ng-template pTemplate="footer">
+            <div class="mt-4" *ngIf="confirmTrigger; else negar">
+                <p-button  (click)="confirmEvent(2)" label="Confirmar evento" icon="pi pi-check" iconPos="right"  styleClass="p-button-success"></p-button>
+            </div>
+            <ng-template #negar class="mt-4" >
+                <p-button  (click)="confirmEvent(3)" label="Rechazar evento" icon="pi pi-times" iconPos="right"  styleClass="p-button-danger"></p-button>
+            </ng-template   >
+        </ng-template>
+    </p-dialog>
+</div>
+
+

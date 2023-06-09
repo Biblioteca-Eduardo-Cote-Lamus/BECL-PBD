@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, map, tap} from 'rxjs';
 import { Events, EventsHour } from 'src/app/data/models/events.model';
@@ -35,7 +35,10 @@ export class EventsService {
   }
 
   public saveEvent( {token, data}: {token: string, data: any} ): Observable<any>{
-    return this.http.post<any>(`${enviroment.productionUrl}schedule_PDB/`,  {token, data})
+    const headers = new HttpHeaders({
+      Authorization: localStorage.getItem('token')!
+    })
+    return this.http.post<any>(`${enviroment.productionUrl}schedule_PDB/`,  {token, data}, {headers})
   }
   
   public downloadDocument({name, type}: {name: string, type: string}){

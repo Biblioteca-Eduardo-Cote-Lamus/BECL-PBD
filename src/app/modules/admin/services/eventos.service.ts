@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, switchMap } from 'rxjs';
 import { Evento } from 'src/app/data/interfaces/eventos.interface';
@@ -9,7 +9,9 @@ import { enviroment } from 'src/app/environments/environment.development';
 })
 export class EventosService {
 
-
+  private headers = new HttpHeaders({
+    Authorization: localStorage.getItem('token') ?? ''
+  })
 
   constructor(
     private http: HttpClient
@@ -20,6 +22,10 @@ export class EventosService {
     return this.http.get<Evento[]>(`${enviroment.baseUrlLocal}list-events`, {params}).pipe(
       map( events => this.transformReponse(events))
     )
+  }
+
+  public confirmEvent(id_event: number, state: number){
+    return this.http.put(`${enviroment.baseUrlLocal}approve-event/`, {id_event, state}, {headers: this.headers})
   }
 
   private transformReponse(events: Evento[]){
@@ -37,29 +43,12 @@ export class EventosService {
         titulo: `${event.titulo}`,
         personas: event.cantidad_personas,
         tipo: event.tipo,
-        estado: event.estado
-        
+        estado: event.estado,
+        encargados: event.encargados,
+        observaciones: event.observaciones
       }
     })
 
   }
 }
 
-// ===================================
-/**
- * 
- *     const eventExample = [
-      {
-          "id": 2,
-          "fecha_registro": "2023-06-06T22:22:41.385127Z",
-          "usuario ": "GARCIA RANGEL ANGEL GABRIEL 07409",
-          "fecha": "2023-05-19 de 6:00 pm a 8:00 pm",
-          "dependencia": "Division de Biblioteca",
-          "titulo": "Auditorio de prueba",
-          "cantidad_personas": 45,
-          "tipo": "BD",
-          "estado": 1
-      }
-    ]
-
- */

@@ -7,6 +7,7 @@ import { ChipsModule } from 'primeng/chips';
 import { TooltipModule } from 'primeng/tooltip';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
+import { DialogModule } from 'primeng/dialog';
 @NgModule({
   declarations: [],
   exports: [
@@ -17,7 +18,8 @@ import { TagModule } from 'primeng/tag';
     ChipsModule,
     TooltipModule,
     TableModule,
-    TagModule
+    TagModule,
+    DialogModule
   ]
 })
 export class PrimeModule { }

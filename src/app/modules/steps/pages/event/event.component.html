@@ -110,18 +110,18 @@
             </div>
 
             <!-- Contenedor para un segundo encargado -->
-            <!-- <div class="mt-4">
+            <div class="mt-4">
                 <div class="flex items-center gap-1 mb-4 pl-1">
                     <input type="checkbox" name="second" id="second" class="w-4 h-4" formControlName="extra" >
                     <label for="second" pTooltip="Persona/s encargas de recibir el espacio solicitado en caso de que el solicitante no pueda recepcionarlo.">Deseo agregar un segundo encargado</label>
                 </div>
                 <div class="card p-fluid" *ngIf="this.eventForm.controls['extra'].value">
-                        <span>Ingrese el correo electronico</span>
-                        <p-chips formControlName="emails" [max]="2" pTooltip="Máximo 2 encargados" >
+                        <span>Ingrese el correo electronico (separar con un espacio los correos)</span>
+                        <p-chips formControlName="emails" [max]="2" pTooltip="Máximo 2 encargados" separator=" ">
                             <ng-template let-item pTemplate="item"> <i class="pi pi-user ml-2"></i> {{ item }} </ng-template>
                         </p-chips>
                 </div>
-            </div> -->
+            </div>
 
             <!-- Contenedor de los botones para avanzar o agendar -->
             <div class="flex justify-between">
@@ -153,32 +153,18 @@
               
                 <!-- Texto de agradecimiento -->
                 <div>
-                  <h2 class="text-2xl font-bold mb-5 text-center">¡Evento Agendado!</h2>
+                  <h2 class="text-2xl font-bold mb-5 text-center">¡Solicitud Enviada!</h2>
                   <div class="text-sm mb-6 max-w-lg mx-auto">
                         <p >
-                            De acuerdo a su solicitud, me permito informar que está autorizado {{getFinalMessage()}} para el día <span class="font-bold">{{ Ticket.event.date[8] + Ticket.event.date[9]  }}</span> de <span class="font-bold"></span> en el horario de <span class="font-bold">{{ Ticket.event.start }}</span> a <span class="font-bold">{{ Ticket.event.end }}</span>. 
+                            Su solicitud ha sido enviada. A su correo institucional se le hará llegar la confirmación en caso de que se acepte el evento.
                         </p>
                         <p class="py-3">
-                            Esté fue agendado a cuenta institucional en Google calendar. En caso de que el evento no se vaya a realizar, por favor comunicarlo a través del correo  a
-                            <a href="mailto:biblioteca@ufps.edu.co" class="text-red-400">biblioteca@ufps.edu.co</a> con anterioridad.
+                            Esté será agendado a su cuenta institucional en Google calendar.
                         </p>  
-                        <p class="font-semibold" *ngIf="Ticket.service.physicalSpace != 'BD'; else alter ">
-                            Adicionalmente, es importante que descargue el formato que sustenta que se realizo el préstamo del espacio. No necesita imprimirlo.
-                            <button  (click)="download()" 
-                                class="block bg-red-500 hover:bg-red-700 text-white text-center font-normal py-2 px-4 my-3 rounded border  transition-colors w-full">
-                                    Descargar Formato
-                                    <i class="ml-4 pi pi-download"></i>
-                        </button>
-                        </p>
-                        <ng-template #alter>
-                            <p>
-                                Al finalizar la sesión se tomará asistencia a través de los correos institucionales y se enviará certificado digital de la participación. <br>
-                            </p>
-                        </ng-template>
-                        <p>La sesión se cerrará en {{countDown}}</p>
+                        <p>La sesión se cerrará en {{countDown}} segundos</p>
                     </div>
                     <!-- contenedor para cerrar sesion o realizar otra agendamiento -->
-                    <div class="flex justify-center gap-6 " *ngIf="controlDownload">
+                    <div class="flex justify-center gap-6 ">
                         <button (click)="reset()" class="inline-block px-8 py-1 bg-yellow-500 hover:bg-yellow-600 text-white rounded-md text-center transition-colors">Agendar Evento</button>
                         <button (click)="auth.logout()" class="inline-block px-8 py-1 bg-red-500 hover:bg-red-600 text-white rounded-md text-center transition-colors">Cerrar sesion <span class="text-[10px]">({{countDown}})</span></button>
                     </div>

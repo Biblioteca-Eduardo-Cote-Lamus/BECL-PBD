@@ -24,6 +24,7 @@
     "@sweetalert2/ngx-sweetalert2": "^12.1.0",
     "@types/file-saver": "^2.0.5",
     "file-saver": "^2.0.5",
+    "ngx-spinner": "^16.0.2",
     "primeicons": "^6.0.1",
     "primeng": "^15.3.0",
     "rxjs": "~7.8.0",
