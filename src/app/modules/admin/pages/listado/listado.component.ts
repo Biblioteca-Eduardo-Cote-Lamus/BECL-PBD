@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Table } from 'primeng/table';
 import { EventosService } from '../../services/eventos.service';
 import { State } from 'src/app/data/enums/state.enum';
+import { NgxSpinnerService } from "ngx-spinner";
 
 @Component({
   selector: 'app-listado',
@@ -25,7 +26,8 @@ export class ListadoComponent implements OnInit{
   public triggerLoader = false;
 
   constructor(
-    private eventsService: EventosService
+    private eventsService: EventosService,
+    private spinner: NgxSpinnerService
   ){ }
 
 
@@ -66,10 +68,15 @@ export class ListadoComponent implements OnInit{
   }
 
   public confirmEvent(status: number){
+    this.spinner.show();
     this.eventsService.confirmEvent(this.selectedEvent.id, status).subscribe({
       next: res => {
-        this.showEventConfirmtTrigger = false
+        this.showEventConfirmtTrigger = false;
+        this.spinner.hide();
         window.location.reload();
+      },
+      error: err => {
+        this.spinner.hide();
       }
     })
   }

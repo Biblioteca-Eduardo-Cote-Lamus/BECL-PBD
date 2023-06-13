@@ -72,7 +72,15 @@ export class SignInComponent implements OnInit{
           })
           return;
         }
-        this.router.navigateByUrl('/eventos/personal-info')
+        let rol = ''
+        this.authService.getcurrentUserObservable.subscribe(user => rol = user.user_rol)
+        
+        if(rol == 'Usuario')
+          this.router.navigateByUrl('/eventos/personal-info')
+        
+        if(rol == 'Administrador')
+          this.router.navigateByUrl('/admin')
+
       }
     });
 

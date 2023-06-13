@@ -11,8 +11,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { DatesPipe } from './pipes/dates.pipe';
 import { TipoPipe } from './pipes/tipo.pipe';
 import { StatesPipe } from './pipes/states.pipe';
-
-
+import { NgxSpinnerModule } from "ngx-spinner";
 
 @NgModule({
   declarations: [
@@ -29,7 +28,8 @@ import { StatesPipe } from './pipes/states.pipe';
     RouterModule,
     AdminRouterModule,
     PrimeModule,
-    HttpClientModule
+    HttpClientModule,
+    NgxSpinnerModule
   ]
 })
 export class AdminModule { }

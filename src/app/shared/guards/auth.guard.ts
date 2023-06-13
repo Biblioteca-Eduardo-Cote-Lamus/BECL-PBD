@@ -16,9 +16,11 @@ export class AuthGuard implements CanActivate ,CanActivateChild{
 
 
   canActivate(): boolean | Observable<boolean>  {
+
+    
     
     if( this.authService.verifyIsUserLogin()){
-      this.router.navigate(['/eventos/personal-info'])
+      this.router.navigate(['/auth'])
       return false
     }
       
@@ -28,10 +30,17 @@ export class AuthGuard implements CanActivate ,CanActivateChild{
 
 
   canActivateChild(): Observable<boolean> | boolean {
-    if( this.authService.verifyIsUserLogin())
+    const {user_rol} = JSON.parse(localStorage.getItem('user')!) || {}
+
+    if( this.authService.verifyIsUserLogin() && user_rol === 'Usuario'){
       return true
-    
-    this.router.navigate(['/auth/'])
+    }
+
+    if(user_rol === 'Administrador')
+      this.router.navigate(['/admin'])
+    else
+      this.router.navigate(['/auth'])
+
     return false;
   }
 
