@@ -1,0 +1,19 @@
+.bg-img{
+    background-image: url('../../../../../assets/background.jpeg');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+}
+
+.bg-effect{
+    background-color: rgba( 0 0 0 / .65);
+}
+
+.bg-step{
+    background-color: #0C0A2D;
+}
+
+.bg-select{
+    background-color: #F8A427;
+}
+

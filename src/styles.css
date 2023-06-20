@@ -3,3 +3,10 @@
 @tailwind components;
 @tailwind utilities;
 @import "primeicons/primeicons.css";
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.bg-img{
+    background: url('assets/background.jpeg') repeat fixed;
+    /* background-size: ; */
+}

@@ -1,0 +1,8 @@
+.card-effect{
+    box-shadow: 0 0 10px 0 rgba(202 138 4 / 0.5);
+}
+
+label:hover{
+    transform: translateY(-5px) ;
+    border-color: rgb(202 ,138 ,4);
+}

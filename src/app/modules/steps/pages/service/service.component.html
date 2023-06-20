@@ -1,0 +1,88 @@
+
+<div class="p-4 h-full">
+    <!-- contenedor del header -->
+    <div class="pb-4">
+        <h2 class="font-bold text-xl mb-2 lg:text-4xl">Servicio</h2>
+        <span class="block font-medium text-sm text-gray-400">Seleccione el servicio que desea solicitar.</span>
+    </div>
+    <!-- contenedor para los check -->
+    <div class="">
+        <form autocomplete="false" [formGroup]="serviceForm"(ngSubmit)="submit()" >
+            <!-- contenedor para mostrar las opciones primarias: Si se selecciona préstamo, se cargan las opciones de prestamo -->
+            <div *ngIf="service != 'prestamo' || serviceForm.controls['service'].value !== 'prestamo'; else loans ">
+                <!-- checkbox para el prestamo -->
+                <div class="w-full relative  mb-4 rounded-md transition-colors">
+                    <input type="radio" class="hidden" formControlName="service" value="prestamo" id="prestamo">
+                    <label class="w-full flex border rounded-md  items-center gap-4 text-xs cursor-pointer p-2 transition-all "[ngClass]="{'border-yellow-600 card-effect': checkedState('prestamo')}" for="prestamo">
+                        <i class="ml-2 pi pi-building lg:text-4xl"></i>
+                        <div>
+                            <h3 class="font-bold pb-1 lg:text-xl">Prestamo</h3>
+                            <span class="blck lg:text-lg text-gray-400"> {{'auditorio, sala de semilleros y sala virtual' | titlecase}} </span>
+                        </div>
+                    </label>
+                </div>
+                <!-- checkbox para la capacitacion  -->
+                <div class="w-full relative mb-8 rounded-md transition-colors">
+                    <input type="radio" class="hidden" formControlName="service" value="capacitacion" id="capacitacion">
+                    <label class="w-full flex border rounded-md  items-center gap-4 text-xs cursor-pointer p-2 transition-all "[ngClass]="{'border-yellow-600 card-effect': checkedState('capacitacion')}" for="capacitacion">
+                        <i class="ml-2 pi pi-desktop lg:text-4xl"></i>
+                        <div>
+                            <h3 class="font-bold pb-1 lg:text-xl">Capacitación</h3>
+                            <span class="blck lg:text-lg text-gray-400">General de las base de datos.</span>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Contedor para mostrar las opciones de préstamo -->
+            <ng-template #loans>
+                <div>
+                    <button type="button" class="flex items-center gap-2 py-1 px-3 mt-0 mb-3 rounded-md text-gray-400"
+                            (click)="changeService()">
+                            <i class="text-sm pi pi-angle-left"></i> 
+                            Cambiar de servicio
+                    </button>
+                    
+                    <div class="flex flex-wrap">
+    
+                        <div class="w-full relative flex items-center gap-4 mb-4 rounded-md transition-colors">
+                            <input type="radio" id="auditorio" formControlName="loan" value="auditorio" class="hidden">
+                            <label for="auditorio" class="w-full flex border rounded-md  items-center gap-4 text-xs cursor-pointer p-4 transition-all" [ngClass]="{'border-yellow-600 card-effect': checkedState('auditorio')}" >
+                                <!-- icono -->
+                                <div class="">
+                                    <i class="text-2xl pi pi-building"></i>
+                                </div>
+                                <h3 class="font-bold text-[15px]"> {{'auditorio eduardo cote lamus' | titlecase}}  </h3>
+                            </label>
+                        </div>
+        
+                        <div class="w-full relative flex items-center gap-4 mb-4 rounded-md transition-colors">
+                            <input type="radio" id="semilleros" formControlName="loan" value="semilleros" class="hidden">
+                            <label for="semilleros" class="w-full flex border rounded-md  items-center gap-4 text-xs cursor-pointer p-4 transition-all" [ngClass]="{'border-yellow-600 card-effect': checkedState('semilleros')}" >
+                                <!-- icono -->
+                                <div class="">
+                                    <i class="text-2xl pi pi-users"></i>
+                                </div>
+                                <h3 class="font-bold text-[15px]"> {{'sala semilleros' | titlecase}}  </h3>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </ng-template>
+
+
+            <!-- contenedor para los botones de back y next -->
+            <div class="flex justify-between">
+                <a routerLink="/eventos/personal-info" class="flex py-1 px-3 mt-4 rounded-md text-gray-400"
+                        (click)="changeStep(1)">Anterior</a>
+
+                <button type="submit" class="flex bg-red-600 py-1 px-3 mt-4 rounded-md text-white" [disabled]="checkNextButton()"
+                        [ngClass]="{'bg-gray-500 cursor-not-allowed' : checkNextButton()}"
+                        >Siguiente</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- <button class="flex ml-auto bg-red-600 py-1 px-3 mt-4 rounded-md text-white"
+        (click)="submit()">Echar pa tras</button> -->
