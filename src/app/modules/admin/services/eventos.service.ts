@@ -31,13 +31,13 @@ export class EventosService {
   private transformReponse(events: Evento[]){
     // realizamos el mapeo de cada objeto 
     return events.map(event => {
-      const fecha_registro = new Date(`${event.fecha_registro}`)
+      const fecha_registro = new Date(`${event.fecha_solicitud}`)
       fecha_registro.setHours(fecha_registro.getHours()-4)
 
       return { 
         id: event.id,
-        usuario: `${event.nombre} ${event.usuario}`,
-        fecha_realizacion: [new Date(`${event.fecha}`), `de ${event.inicio} a ${event.final}`],
+        usuario: `${event.nombre}`,
+        fecha_realizacion: [new Date(`${event.fecha_solicitada}`), `de ${event.inicio} a ${event.final}`],
         fecha_registro,
         dependencia: `${event.dependencia}`,
         titulo: `${event.titulo}`,
