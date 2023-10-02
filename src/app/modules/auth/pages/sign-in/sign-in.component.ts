@@ -4,6 +4,7 @@ import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { StepService } from 'src/app/shared/services/step.service';
+import { VALID_ROLES } from 'src/app/data/const/roles.const';
 @Component({
   selector: 'app-sign-in',
   templateUrl: './sign-in.component.html',
@@ -75,7 +76,7 @@ export class SignInComponent implements OnInit{
         let rol = ''
         this.authService.getcurrentUserObservable.subscribe(user => rol = user.user_rol)
         
-        if(rol == 'Usuario')
+        if(VALID_ROLES.COMMONT_USER.includes(rol.toUpperCase()))
           this.router.navigateByUrl('/eventos/personal-info')
         
         if(rol == 'Administrador')
