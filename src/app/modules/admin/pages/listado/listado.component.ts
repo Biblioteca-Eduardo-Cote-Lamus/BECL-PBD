@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Table } from 'primeng/table';
 import { EventosService } from '../../services/eventos.service';
-import { State } from 'src/app/data/enums/state.enum';
 import { NgxSpinnerService } from "ngx-spinner";
+import { Evento, EventoUsuario } from 'src/app/data/interfaces/eventos.interface';
 
 @Component({
   selector: 'app-listado',
@@ -11,24 +11,31 @@ import { NgxSpinnerService } from "ngx-spinner";
 })
 export class ListadoComponent implements OnInit{
 
-  public eventsList:any = []
+  public eventsList:Array<Evento> = []
 
   public filter = 1;
+ 
+  public showEventConfirmtTrigger = true;
 
-  public state = State
-
-  public showEventConfirmtTrigger = false;
-
-  public selectedEvent:any;
+  public selectedEvent:Evento | null = null;
 
   public confirmTrigger = 1; 
 
   public triggerLoader = false;
+  
+  public notManagerSeleted = false;
+
+  public manager: EventoUsuario | undefined;
 
   constructor(
     private eventsService: EventosService,
     private spinner: NgxSpinnerService
   ){ }
+
+  public get errorClass(){
+    return   this.notManagerSeleted ? "w-full border border-red-500" : "w-full"
+  }
+  
 
 
   ngOnInit(): void {
@@ -61,23 +68,39 @@ export class ListadoComponent implements OnInit{
     return state == 2 ? 'bg-[#008000]' : 'bg-red-600';
   }
 
+  public getManagerAlert(){
+    return 
+  }
+
   public showEventConfirmt (id: number, trigger: number) {
-    this.selectedEvent = {...this.eventsList.find((event:any) => event.id == id)};
+    this.selectedEvent = {...this.eventsList.find((event:Evento) => event.id == id) !};
     this.showEventConfirmtTrigger = true;
     this.confirmTrigger  = trigger;
   }
 
-  public confirmEvent(status: number){
+  public confirmEvent(){
+
+    if(!this.manager){
+      this.notManagerSeleted = true
+      return 
+    }
+
     this.spinner.show();
-    this.eventsService.confirmEvent(this.selectedEvent.id, status).subscribe({
+    this.eventsService.confirmEvent(this.selectedEvent!.id, this.manager.id).subscribe({
       next: res => {
         this.showEventConfirmtTrigger = false;
         this.spinner.hide();
+        this.notManagerSeleted = false;
         window.location.reload();
       },
       error: err => {
         this.spinner.hide();
       }
     })
+  }
+
+  public closeModal() {
+    this.manager = undefined;
+    this.notManagerSeleted = false
   }
 }

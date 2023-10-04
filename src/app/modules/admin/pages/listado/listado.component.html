@@ -1,171 +1,284 @@
 <div class=" ">
-    <!-- titulo de la seccion -->
-    <div class="px-2 py-4">
-        <h2>Listado de Eventos</h2>
-    </div>
+  <!-- titulo de la seccion -->
+  <div class="px-2 py-4">
+    <h2>Listado de Eventos</h2>
+  </div>
 
-    <!-- cards -->
-    <div class="grid grid-cols-3 gap-4 px-3 mb-6 ">
-        <div class="bg-slate-500 text-white hover:scale-[1.05] transition-all cursor-pointer" (click)="changeEvents(1)">
-            <!-- encabezado de icono -->
-            <div class="flex-col p-2 md:p-4">
-                <i class="pi pi-eye text-4xl inline-block pb-4"></i>
-                <span class="block">Solicitudes pendientes</span>
-            </div>
-            <!-- boton de ver  -->
-            <div class="">
-                <div href="#" class="block w-full py-1 text-center bg-slate-600">
-                    Ver  
-                    <i class="pi pi-chevron-right"></i>
-                </div>
-            </div>
+  <!-- cards -->
+  <div class="grid grid-cols-3 gap-4 px-3 mb-6">
+    <div
+      class="bg-slate-500 text-white hover:scale-[1.05] transition-all cursor-pointer"
+      (click)="changeEvents(1)"
+    >
+      <!-- encabezado de icono -->
+      <div class="flex-col p-2 md:p-4">
+        <i class="pi pi-eye text-4xl inline-block pb-4"></i>
+        <span class="block">Solicitudes pendientes</span>
+      </div>
+      <!-- boton de ver  -->
+      <div class="">
+        <div href="#" class="block w-full py-1 text-center bg-slate-600">
+          Ver
+          <i class="pi pi-chevron-right"></i>
         </div>
-        <div class="bg-[#008000] text-white hover:scale-[1.05] transition-all cursor-pointer" (click)="changeEvents(2)">
-            <!-- encabezado de icono -->
-            <div class="flex-col p-2 md:p-4 ">
-                <i class="pi pi-thumbs-up text-4xl inline-block pb-4"></i>
-                <span class="block">Solicitudes Aprobadas</span>
-            </div>
-            <!-- boton de ver  -->
-            <div class="">
-                <div href="#" class="block w-full py-1 text-center bg-[#38b000]">
-                    Ver  
-                    <i class="pi pi-chevron-right"></i>
-                </div>
-            </div>
-        </div>
-        <div class="bg-red-600 text-white hover:scale-[1.05] transition-all cursor-pointer" (click)="changeEvents(3)">
-            <!-- encabezado de icono -->
-            <div class="flex-col p-2 md:p-4 ">
-                <i class="pi pi-thumbs-down text-4xl inline-block pb-4"></i>
-                <span class="block">Solicitudes rechazadas</span>
-            </div>
-            <!-- boton de ver  -->
-            <div class="">
-                <div href="#" class="block w-full py-1 text-center bg-red-700">
-                    Ver  
-                    <i class="pi pi-chevron-right"></i>
-                </div>
-            </div>
-        </div>
+      </div>
     </div>
-    <!-- tabla inicial de eventos por revisar -->
-    <div class="px-3">
-        <div class="bg-white shadow-xl border-t-2  border-blue-600 rounded-md">
-            <!-- encabezado -->
-            <div class="border-gray-400 border-b">
-                <h3 class=" flex items-center text-xl  p-4">
-                    <i class="pi pi-eye mr-3"></i>
-                    Eventos por revisar
-                </h3>
-            </div>
-            <div class="grid place-content-center" *ngIf="triggerLoader">
-                <div class="mb-10 loader"></div>
-            </div>
-            <div class="" *ngIf="!triggerLoader">
-                <p-table 
-                        #dt1
-                        [value]="eventsList" 
-                        [tableStyle]="{ 'min-width': '50rem'}" 
-                        [styleClass]="'p-datatable-sm'"
-                        [rowsPerPageOptions]="[5,10, 25, 50]"
-                        [paginator]="true"
-                        [rows]="5"
-                        [globalFilterFields]="['usuario', 'tipo']"
-                        [rowHover]="true"
-                        >
-    
-                    <ng-template pTemplate="caption">
-                        <div class="flex flex-wrap items-center justify-between gap-3">
-                            <div>
-                                <button pButton label="limpiar" class="" icon="pi pi-filter-slash" (click)="clear(dt1)"></button>
-                            </div>
-                            <div class="p-input-icon-left ml-auto">
-                                <i class="pi pi-search"></i>
-                                <input pInputText type="text" (input)="filtrar($event, dt1)" placeholder="Buscar" />
-                            </div>
-                        </div>
-                    </ng-template>
-                    <ng-template pTemplate="header">
-                        <tr>
-                            <th>Fecha solicitud</th>
-                            <th>Solicitante</th>
-                            <th>Fecha apartada </th>
-                            <th>Tipo</th>
-                            <th>Asistentes</th>
-                            <th>Estado</th>
-                            <th *ngIf="filter === 1">Aceptar</th>
-                            <th *ngIf="filter === 1">Rechazar</th>
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="body" let-event>
-                        <tr>
-                            <td>{{ event.fecha_registro | dates:'registro' }}</td>
-                            <td>{{ event.usuario | titlecase }}</td>
-                            <td>{{ event.fecha_realizacion[0] | dates:'realizacion' }} {{event.fecha_realizacion[1]}} </td>
-                            <td>{{ event.tipo | tipo }}</td>
-                            <td>{{ event.personas }}</td>
-                            <td> 
-                                <div class="flex items-center justify-center rounded-md  text-white gap-2  py-1 px-2" [ngClass]="getBackgroundIndicatorColor(event.estado)">
-                                    <i class="pi pi-info-circle"></i>
-                                    <span class="" >
-                                        {{event.estado | states}}
-                                    </span>
-                                </div>
-                            </td>
-                            <ng-container *ngIf="filter === 1">
-                                <td>
-                                    <button (click)="showEventConfirmt(event.id,1)" class="bg-[#008000] p-2 rounded-md hover:bg-[#006400] inline-block text-white transition-colors">
-                                        <i class="pi pi-thumbs-up-fill"></i>                                         
-                                    </button> 
-                                </td>
-                                <td> 
-                                    <button (click)="showEventConfirmt(event.id,0)" class="bg-[#8d0801] p-2 rounded-md hover:bg-[#bf0603] inline-block text-white transition-colors">
-                                        <i class="pi pi-thumbs-down-fill"></i> 
-                                    </button> 
-                                </td>
-                            </ng-container>
- 
-                        </tr>
-                    </ng-template>
-                </p-table>
-            </div>
+    <div
+      class="bg-[#008000] text-white hover:scale-[1.05] transition-all cursor-pointer"
+      (click)="changeEvents(2)"
+    >
+      <!-- encabezado de icono -->
+      <div class="flex-col p-2 md:p-4">
+        <i class="pi pi-thumbs-up text-4xl inline-block pb-4"></i>
+        <span class="block">Solicitudes Aprobadas</span>
+      </div>
+      <!-- boton de ver  -->
+      <div class="">
+        <div href="#" class="block w-full py-1 text-center bg-[#38b000]">
+          Ver
+          <i class="pi pi-chevron-right"></i>
         </div>
+      </div>
     </div>
+    <div
+      class="bg-red-600 text-white hover:scale-[1.05] transition-all cursor-pointer"
+      (click)="changeEvents(3)"
+    >
+      <!-- encabezado de icono -->
+      <div class="flex-col p-2 md:p-4">
+        <i class="pi pi-thumbs-down text-4xl inline-block pb-4"></i>
+        <span class="block">Solicitudes rechazadas</span>
+      </div>
+      <!-- boton de ver  -->
+      <div class="">
+        <div href="#" class="block w-full py-1 text-center bg-red-700">
+          Ver
+          <i class="pi pi-chevron-right"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- tabla inicial de eventos por revisar -->
+  <div class="px-3">
+    <div class="bg-white shadow-xl border-t-2 border-blue-600 rounded-md">
+      <!-- encabezado -->
+      <div class="border-gray-400 border-b">
+        <h3 class="flex items-center text-xl p-4">
+          <i class="pi pi-eye mr-3"></i>
+          Eventos por revisar
+        </h3>
+      </div>
+      <div class="grid place-content-center" *ngIf="triggerLoader">
+        <div class="mb-10 loader"></div>
+      </div>
+      <div class="" *ngIf="!triggerLoader">
+        <p-table
+          #dt1
+          [value]="eventsList"
+          [tableStyle]="{ 'min-width': '50rem' }"
+          [styleClass]="'p-datatable-sm'"
+          [rowsPerPageOptions]="[5, 10, 25, 50]"
+          [paginator]="true"
+          [rows]="5"
+          [globalFilterFields]="['usuario', 'tipo']"
+          [rowHover]="true"
+        >
+          <ng-template pTemplate="caption">
+            <div class="flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <button
+                  pButton
+                  label="limpiar"
+                  class=""
+                  icon="pi pi-filter-slash"
+                  (click)="clear(dt1)"
+                ></button>
+              </div>
+              <div class="p-input-icon-left ml-auto">
+                <i class="pi pi-search"></i>
+                <input
+                  pInputText
+                  type="text"
+                  (input)="filtrar($event, dt1)"
+                  placeholder="Buscar"
+                />
+              </div>
+            </div>
+          </ng-template>
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Fecha solicitud</th>
+              <th>Solicitante</th>
+              <th>Fecha apartada</th>
+              <th>Tipo</th>
+              <th>Asistentes</th>
+              <th>Estado</th>
+              <th *ngIf="filter === 1">Aceptar</th>
+              <th *ngIf="filter === 1">Rechazar</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-event>
+            <tr>
+              <td>{{ event.fechaSolicitud | dates : "registro" }}</td>
+              <td>{{ event.usuario.fullName }}</td>
+              <td>
+                {{ event.fechaSolicitada | dates }} de {{ event.inicio }} a
+                {{ event.final }}
+              </td>
+              <td>{{ event.tipo | tipo }}</td>
+              <td>{{ event.cantidadPersonas }}</td>
+              <td>
+                <div
+                  class="flex items-center justify-center rounded-md text-white gap-2 py-1 px-2"
+                  [ngClass]="getBackgroundIndicatorColor(event.estado)"
+                >
+                  <i class="pi pi-info-circle"></i>
+                  <span class="">
+                    {{ event.estado }}
+                  </span>
+                </div>
+              </td>
+              <ng-container *ngIf="filter === 1">
+                <td>
+                  <button
+                    (click)="showEventConfirmt(event.id, 1)"
+                    class="bg-[#008000] p-2 rounded-md hover:bg-[#006400] inline-block text-white transition-colors"
+                  >
+                    <i class="pi pi-thumbs-up-fill"></i>
+                  </button>
+                </td>
+                <td>
+                  <button
+                    (click)="showEventConfirmt(event.id, 0)"
+                    class="bg-[#8d0801] p-2 rounded-md hover:bg-[#bf0603] inline-block text-white transition-colors"
+                  >
+                    <i class="pi pi-thumbs-down-fill"></i>
+                  </button>
+                </td>
+              </ng-container>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+  </div>
 </div>
 
+<!--  selectedEvent -->
 <div *ngIf="selectedEvent">
-    <p-dialog header="Información detallada del evento" [(visible)]="showEventConfirmtTrigger" [modal]="true" [style]="{ width: '60vw' }" [draggable]="false" [resizable]="false">
-        <!-- Informacion personal del solicitante  -->
-        <div class="mt-4">
-            <h2 class="font-bold mb-2">Información del solicitante</h2>
-            <p class="mb-2 pl-2">Nombre: <span class="font-bold">{{selectedEvent.usuario | titlecase }}</span>  </p>
-            <p  class="mb-2 pl-2">Fecha de la Solicitud: <span class="font-bold">{{ selectedEvent.fecha_registro | dates:'registro' }}</span>  </p>
-            <p  class="mb-2 pl-2">Dependencia: <span class="font-bold">{{ selectedEvent.dependencia }}</span>  </p>
-        </div>
-        <!-- Información del evento -->
-        <div>
-            <h2 class="font-bold mb-2">Información del Evento</h2>
-            <div class="pl-2">
-                <ul>
-                    <li> Titulo: <span class="font-bold">{{selectedEvent.titulo | titlecase }} </span>  </li>
-                    <li> Personas a asistir: <span class="font-bold">{{selectedEvent.personas }} </span>  </li>
-                    <li> Tipo de evento: <span class="font-bold">{{selectedEvent.tipo | tipo }} </span>  </li>
-                    <li> Estado Actual: <span class="font-bold">{{selectedEvent.estado | states }} </span>  </li>
-                    <li> Otros encargados: <span class="font-bold">{{selectedEvent.encargados }} </span>  </li>
-                    <li> Observaciones: <span class="font-bold">{{selectedEvent.observaciones }} </span>  </li>
-                </ul>
-            </div>
-        </div>
-        <ng-template pTemplate="footer">
-            <div class="mt-4" *ngIf="confirmTrigger; else negar">
-                <p-button  (click)="confirmEvent(2)" label="Confirmar evento" icon="pi pi-check" iconPos="right"  styleClass="p-button-success"></p-button>
-            </div>
-            <ng-template #negar class="mt-4" >
-                <p-button  (click)="confirmEvent(3)" label="Rechazar evento" icon="pi pi-times" iconPos="right"  styleClass="p-button-danger"></p-button>
-            </ng-template   >
+  <p-dialog
+    header="Información del Evento"
+    [closable]="true"
+    (visibleChange)="closeModal()"
+    [(visible)]="showEventConfirmtTrigger"
+    [modal]="true"
+    [style]="{ width: '90vw', 'max-width': '650px', 'padding-bottom': '1rem' }"
+    [draggable]="false"
+    [resizable]="false"
+  >
+    <!-- Informacion personal del solicitante  -->
+    <div class="">
+      <h2 class="font-bold mb-2">Información del solicitante</h2>
+      <p class="mb-2 pl-2 font-bold">
+        Nombre:
+        <span class="font-normal"
+          >{{ selectedEvent.usuario.fullName | titlecase }} -
+          {{ selectedEvent.usuario.codigo }}</span
+        >
+      </p>
+      <p class="mb-2 pl-2 font-bold">
+        Fecha de la Solicitud:
+        <span class="font-normal">{{
+          selectedEvent.fechaSolicitud | dates : "registro"
+        }}</span>
+      </p>
+      <p class="mb-2 pl-2 font-bold">
+        Dependencia:
+        <span class="font-normal">{{ selectedEvent.dependencia }}</span>
+      </p>
+    </div>
+    <!-- Información del evento -->
+    <div class="mb-4">
+      <h2 class="font-bold mb-2">Información del Evento</h2>
+      <div class="pl-2">
+        <ul>
+          <li class="font-bold">
+            Titulo:
+            <span class="font-normal"
+              >{{ selectedEvent.titulo | titlecase }}
+            </span>
+          </li>
+          <li class="font-bold">
+            Personas a asistir:
+            <span class="font-normal"
+              >{{ selectedEvent.cantidadPersonas }}
+            </span>
+          </li>
+          <li class="font-bold">
+            Tipo de evento:
+            <span class="font-normal">{{ selectedEvent.tipo | tipo }} </span>
+          </li>
+          <li class="font-bold">
+            Estado Actual:
+            <span class="font-normal">{{ selectedEvent.estado }} </span>
+          </li>
+          <li class="font-bold">
+            Fecha solicitada:
+            <span class="font-normal"
+              >{{ selectedEvent.fechaSolicitada | dates }} de
+              {{ selectedEvent.inicio }} a {{ selectedEvent.final }}
+            </span>
+          </li>
+          <li class="font-bold">
+            Otros encargados:
+            <span class="font-normal">{{ selectedEvent.encargados }} </span>
+          </li>
+          <!-- <li class="font-bold"> Observaciones: <span class="font-normal">{{selectedEvent.observaciones }} </span>  </li> -->
+        </ul>
+      </div>
+    </div>
+    <div class="mt-3 pl-2">
+      <p class="pb-2 font-bold">
+        Seleccione el funcionario encargado de recepcionar el evento.
+      </p>
+      <p-dropdown
+        [options]="selectedEvent.funcionarios"
+        optionLabel="fullName"
+        [(ngModel)]="manager"
+        [styleClass]="errorClass"
+        appendTo="body"
+        placeholder="Seleccione un funcionario"
+      >
+        <ng-template let-funcionario pTemplate="item">
+          {{ funcionario.fullName | titlecase }}
         </ng-template>
-    </p-dialog>
+      </p-dropdown>
+      <span
+        class="text-red-500 font-semibold inline-block pl-2"
+        *ngIf="notManagerSeleted"
+      >
+        Tiene que seleccionar un encargado para el evento.</span
+      >
+    </div>
+    <ng-template pTemplate="footer">
+      <div class="mt-4 flex justify-between" *ngIf="confirmTrigger">
+        <p-button
+          (click)="confirmEvent()"
+          label="Rechazar evento"
+          icon="pi pi-times"
+          iconPos="right"
+          styleClass="p-button-danger"
+        ></p-button>
+        <p-button
+          (click)="confirmEvent()"
+          label="Confirmar evento"
+          icon="pi pi-check"
+          iconPos="right"
+          styleClass="p-button-success"
+        ></p-button>
+      </div>
+    </ng-template>
+  </p-dialog>
 </div>
 
 <ngx-spinner
@@ -176,5 +289,3 @@
 >
   <p style="font-size: 20px; color: white">Loading...</p>
 </ngx-spinner>
-
-

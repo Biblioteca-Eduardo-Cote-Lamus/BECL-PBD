@@ -12,6 +12,7 @@ import { DatesPipe } from './pipes/dates.pipe';
 import { TipoPipe } from './pipes/tipo.pipe';
 import { StatesPipe } from './pipes/states.pipe';
 import { NgxSpinnerModule } from "ngx-spinner";
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { NgxSpinnerModule } from "ngx-spinner";
     AdminRouterModule,
     PrimeModule,
     HttpClientModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
+    FormsModule
   ]
 })
 export class AdminModule { }
