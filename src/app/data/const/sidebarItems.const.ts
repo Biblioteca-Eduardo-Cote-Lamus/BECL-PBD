@@ -6,7 +6,13 @@ export const sidebarItems: ISidebar[]  = [
         title: 'Eventos',
         icon: 'pi pi-file',
         roles: [Role.ADMIN, Role.ENCARGADO],
-        link: ['/admin/eventos']
+        link: ['/admin/eventos-list']
+    },
+    {
+        title: 'Funcionarios',
+        icon: 'pi pi-users',
+        roles: [Role.ADMIN],
+        link: ['/admin/funcionarios']
     },
 
 ]

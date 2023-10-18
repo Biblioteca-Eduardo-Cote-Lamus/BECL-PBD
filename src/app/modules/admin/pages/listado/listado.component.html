@@ -109,12 +109,11 @@
             <tr>
               <th>Fecha solicitud</th>
               <th>Solicitante</th>
-              <th>Fecha apartada</th>
+              <th pSortableColumn="fechaSolicitada">Fecha apartada</th>
               <th>Tipo</th>
               <th>Asistentes</th>
               <th>Estado</th>
-              <th *ngIf="filter === 1">Aceptar</th>
-              <th *ngIf="filter === 1">Rechazar</th>
+              <th *ngIf="filter === 1">Ver</th>
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-event>
@@ -129,8 +128,8 @@
               <td>{{ event.cantidadPersonas }}</td>
               <td>
                 <div
-                  class="flex items-center justify-center rounded-md text-white gap-2 py-1 px-2"
-                  [ngClass]="getBackgroundIndicatorColor(event.estado)"
+                  class="flex items-center justify-center rounded-md text-[#003049] gap-2 py-1 px-2 bg-[#fcbf49]"
+                  [ngClass]="getStateColors(event.estado)"
                 >
                   <i class="pi pi-info-circle"></i>
                   <span class="">
@@ -144,15 +143,7 @@
                     (click)="showEventConfirmt(event.id, 1)"
                     class="bg-[#008000] p-2 rounded-md hover:bg-[#006400] inline-block text-white transition-colors"
                   >
-                    <i class="pi pi-thumbs-up-fill"></i>
-                  </button>
-                </td>
-                <td>
-                  <button
-                    (click)="showEventConfirmt(event.id, 0)"
-                    class="bg-[#8d0801] p-2 rounded-md hover:bg-[#bf0603] inline-block text-white transition-colors"
-                  >
-                    <i class="pi pi-thumbs-down-fill"></i>
+                    <i class="pi pi-eye"></i>
                   </button>
                 </td>
               </ng-container>

@@ -1,0 +1,72 @@
+<section class="pt-4  bg-gray-100 w-full min-h-screen">
+  <!-- header -->
+  <header
+    class="flex p-4 mb-6 items-center justify-between bg-white rounded-md"
+  >
+    <h2>Funcionarios</h2>
+    <button
+    (click)="goToEmployee()"
+      pButton
+      pRipple
+      label="Agregar nuevo"
+      icon="pi pi-plus"
+      class="p-button-success"
+    ></button>
+  </header>
+
+  <section class="p-4 bg-white rounded-md">
+    <p-table
+      [globalFilterFields]="['ubicacion']"
+      [value]="managers"
+      [paginator]="true"
+      [rows]="8"
+      [tableStyle]="{ 'min-width': '50rem' }"
+      selectionMode="multiple"
+      [selectionPageOnly]="true"
+      (selectionChange)="selectManager($event)"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 4rem">
+            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+          </th>
+          <th>Codigo</th>
+          <th>Nombre</th>
+          <th>email</th>
+          <th>Cargo actual</th>
+          <th>
+            Ubicacion
+        </th>
+          <th>Activo</th>
+          <th>Acciones</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-product>
+        <tr >
+          <td>
+            <p-tableCheckbox [value]="product"></p-tableCheckbox>
+          </td>
+          <td>{{ product.codigo }}</td>
+          <td>{{ product.fullName }}</td>
+          <td>{{ product.email }}</td>
+          <td>{{ product.cargo }}</td>
+          <td>{{ product.ubicacion }}</td>
+          <td>
+            <p-inputSwitch [(ngModel)]="product.isActive" (onChange)="algo()"></p-inputSwitch>
+          </td>
+          <td>
+            <p-button
+              icon="pi pi-pencil"
+              styleClass="p-button-rounded  p-button-text"
+              (onClick)="goToEditEmployee(product.codigo)"
+            ></p-button>
+            <p-button
+              icon="pi pi-trash"
+              styleClass="p-button-rounded p-button-danger p-button-text"
+            ></p-button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </section>
+</section>

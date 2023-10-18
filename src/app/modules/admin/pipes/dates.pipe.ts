@@ -12,7 +12,7 @@ export class DatesPipe implements PipeTransform {
     let format = this.convertToHumanDate(value);
     
     if(dateIdentify === 'registro'){
-      value.setHours(value.getHours()-1);
+      value.setHours(value.getHours());
       format += `a las ${value.toISOString().split('T')[1].split('.')[0]}`
     }
 

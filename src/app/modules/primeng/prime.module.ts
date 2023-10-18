@@ -8,6 +8,9 @@ import { TooltipModule } from 'primeng/tooltip';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { DialogModule } from 'primeng/dialog';
+import { InputSwitchModule } from 'primeng/inputswitch';
+import { PanelModule } from 'primeng/panel';
+import { CardModule } from 'primeng/card';
 @NgModule({
   declarations: [],
   exports: [
@@ -19,7 +22,10 @@ import { DialogModule } from 'primeng/dialog';
     TooltipModule,
     TableModule,
     TagModule,
-    DialogModule
+    DialogModule,
+    InputSwitchModule,
+    PanelModule,
+    CardModule
   ]
 })
 export class PrimeModule { }

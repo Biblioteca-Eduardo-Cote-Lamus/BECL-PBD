@@ -32,6 +32,10 @@ export class AuthGuard implements CanActivate ,CanActivateChild{
 
   canActivateChild(): Observable<boolean> | boolean {
     const {user_rol} = JSON.parse(localStorage.getItem('user')!) || {}
+
+    if(!user_rol)
+      return false
+    
     const isValidUser = VALID_ROLES.COMMONT_USER.includes(user_rol.toUpperCase())
 
     if( this.authService.verifyIsUserLogin() && isValidUser){

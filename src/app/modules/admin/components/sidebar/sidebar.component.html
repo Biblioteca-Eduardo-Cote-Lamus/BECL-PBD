@@ -19,7 +19,7 @@
                         routerLinkActive="bg-gray-200"
                         [routerLink]="item.link ? item.link : null"
                         (click)="item.hidden = !item.hidden"
-                        class="flex items-center justify-between w-full p-3 bg-gray-300 hover:bg-gray-200 hover:text-black font-semibold hover:font-bold transition-all cursor-pointer">
+                        class="flex items-center justify-between w-full p-3 hover:bg-gray-200 hover:text-black font-semibold hover:font-bold transition-all cursor-pointer">
                        <span> <i [class]="item.icon" class="mx-3"></i> {{item.title}} </span>
                        <span *ngIf="item.children" [ngClass]="{'rotate-90': item.hidden}">
                             <i class="pi pi-angle-right "></i>

@@ -3,6 +3,7 @@ import { Table } from 'primeng/table';
 import { EventosService } from '../../services/eventos.service';
 import { NgxSpinnerService } from "ngx-spinner";
 import { Evento, EventoUsuario } from 'src/app/data/interfaces/eventos.interface';
+import { getStateStyle } from "../../utils";
 
 @Component({
   selector: 'app-listado',
@@ -26,6 +27,8 @@ export class ListadoComponent implements OnInit{
   public notManagerSeleted = false;
 
   public manager: EventoUsuario | undefined;
+
+  getStateColors = getStateStyle
 
   constructor(
     private eventsService: EventosService,
@@ -59,13 +62,6 @@ export class ListadoComponent implements OnInit{
         this.triggerLoader = false;
       }
     })
-  }
-
-  public getBackgroundIndicatorColor( state: number){
-    if(state == 1)
-      return 'bg-orange-400'
-    
-    return state == 2 ? 'bg-[#008000]' : 'bg-red-600';
   }
 
   public getManagerAlert(){

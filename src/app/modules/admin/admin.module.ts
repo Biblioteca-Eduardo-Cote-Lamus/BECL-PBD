@@ -10,9 +10,9 @@ import { PrimeModule } from '../primeng/prime.module';
 import { HttpClientModule } from '@angular/common/http';
 import { DatesPipe } from './pipes/dates.pipe';
 import { TipoPipe } from './pipes/tipo.pipe';
-import { StatesPipe } from './pipes/states.pipe';
 import { NgxSpinnerModule } from "ngx-spinner";
 import { FormsModule } from '@angular/forms';
+import { EmployeesModule } from './pages/employees/employees.module';
 
 @NgModule({
   declarations: [
@@ -22,7 +22,6 @@ import { FormsModule } from '@angular/forms';
     ListadoComponent,
     DatesPipe,
     TipoPipe,
-    StatesPipe
   ],
   imports: [
     CommonModule,
@@ -31,7 +30,8 @@ import { FormsModule } from '@angular/forms';
     PrimeModule,
     HttpClientModule,
     NgxSpinnerModule,
-    FormsModule
+    FormsModule,
+    EmployeesModule
   ]
 })
 export class AdminModule { }
