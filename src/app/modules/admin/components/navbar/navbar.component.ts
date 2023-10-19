@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { AuthService } from 'src/app/modules/auth/services/auth.service';
 
 @Component({
@@ -9,15 +9,20 @@ import { AuthService } from 'src/app/modules/auth/services/auth.service';
 export class NavbarComponent {
 
   @Output() close = new EventEmitter<boolean>();
-  private flagClose = false;
+  private flagClose: boolean;
 
   constructor(
     private auth: AuthService
-  ) { }
+  ) {
+
+      const stateNavbar = JSON.parse(localStorage.getItem('navbar') ?? 'false')
+      this.flagClose = stateNavbar;
+   }
 
   public closeNav() {
     this.flagClose = !this.flagClose;
     this.close.emit(this.flagClose);
+    localStorage.setItem('navbar', `${this.flagClose}`)
   }
 
   public logout(){
